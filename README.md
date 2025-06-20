@@ -18,13 +18,11 @@ A modern, full-featured **E-Commerce** mobile application built using **Flutter*
 
 ## 🧱 Tech Stack
 
-- **Flutter** (UI toolkit)
-- **Dart** (Programming language)
-- **MVVM** (Architecture pattern)
-- **Provider / Riverpod / Bloc** (Choose the one you're using for state management)
+- **Flutter**
+- **Dart**
+- **MVVM**
+- **Bloc**
 - **RESTful APIs** for backend communication
 
 ---
-
-## 📁 Project Structure
 
