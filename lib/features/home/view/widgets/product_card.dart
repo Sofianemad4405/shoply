@@ -92,8 +92,8 @@ class _ProductCardState extends State<ProductCard> {
                           );
                     },
                     child: Container(
-                      height: 40,
-                      width: 40,
+                      height: 50,
+                      width: 50,
                       decoration: BoxDecoration(
                         color: const Color.fromARGB(255, 239, 239, 239),
                         shape: BoxShape.circle,
@@ -106,7 +106,7 @@ class _ProductCardState extends State<ProductCard> {
                             widget.product.isLiked
                                 ? Colors.red
                                 : Colors.black38,
-                        size: 28,
+                        size: 32,
                       ),
                     ),
                   ),

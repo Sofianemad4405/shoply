@@ -40,7 +40,7 @@ class _CartState extends State<Cart> {
           if (state is NoProductsState) {
             return Center(
               child: Text(
-                "Your cart is empty",
+                state.message,
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
@@ -147,11 +147,9 @@ class _CartState extends State<Cart> {
                                 Gap(5),
                                 CustomCircularContainer(
                                   onTap: () {
-                                    setState(() {
-                                      context.read<CartCubit>().removeProduct(
-                                        product,
-                                      );
-                                    });
+                                    context.read<CartCubit>().removeProduct(
+                                      product,
+                                    );
                                   },
                                   icon: Ionicons.trash,
                                 ),

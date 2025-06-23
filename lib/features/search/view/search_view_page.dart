@@ -56,7 +56,7 @@ class _SearchViewPageState extends State<SearchViewPage> {
                       mainAxisSpacing: 10,
                       childAspectRatio:
                           MediaQuery.of(context).size.width /
-                          (MediaQuery.of(context).size.height * 0.6),
+                          (MediaQuery.of(context).size.height * 0.7),
                     ),
                     itemBuilder: (context, index) {
                       return ProductCard(product: products[index]);

@@ -1,10 +1,12 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:shopify/core/constants.dart';
 import 'package:shopify/core/text_styles.dart';
+import 'package:shopify/features/Info/cubits/cubit/profile_cubit.dart';
 import 'package:shopify/features/home/model/product_model.dart';
 import 'package:shopify/features/home/view/widgets/review_list_tile.dart';
 
@@ -186,6 +188,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                           setState(() {
                             isFollowed = !isFollowed;
                           });
+                          if (isFollowed) {
+                            context.read<ProfileCubit>().addBrandToFollowing();
+                          } else {
+                            context
+                                .read<ProfileCubit>()
+                                .removeBrandFromFollowing();
+                          }
                         },
                         child: Container(
                           width: 100,

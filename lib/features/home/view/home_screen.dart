@@ -157,7 +157,7 @@ class _HomeState extends State<Home> {
                                 mainAxisSpacing: 12,
                                 childAspectRatio:
                                     (MediaQuery.of(context).size.width / 2) /
-                                    (MediaQuery.of(context).size.height * 0.38),
+                                    (MediaQuery.of(context).size.height * 0.34),
                               ),
 
                           shrinkWrap: true,

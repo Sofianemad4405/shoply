@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:shopify/features/Info/view/info.dart';
 import 'package:shopify/features/Likes/view/likes.dart';
 import 'package:shopify/features/cart/view/cart.dart';
@@ -14,14 +14,13 @@ class Root extends StatefulWidget {
 }
 
 class _RootState extends State<Root> {
-  final List<Widget> Pages = [Home(), Likes(), Cart(), Info()];
-  late PageController _pageController;
+  final List<Widget> Pages = [Home(), Likes(), Cart(), ProfileInfo()];
+  final PageController _pageController = PageController(initialPage: 0);
   int currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController();
   }
 
   @override
@@ -32,46 +31,54 @@ class _RootState extends State<Root> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        if (currentIndex != 0) {
-          _pageController.jumpToPage(0);
-          return false;
-        }
-        return true;
-      },
-      child: Scaffold(
-        body: PageView(
-          onPageChanged:
-              (value) => setState(() {
-                currentIndex = value;
-              }),
-          controller: _pageController,
-          physics: NeverScrollableScrollPhysics(),
-          children: Pages,
-        ),
-        bottomNavigationBar: GNav(
-          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-          backgroundColor: Colors.white,
-          activeColor: Colors.green,
-          gap: 8,
-          tabs: [
-            GButton(icon: Ionicons.home, text: "Home"),
-            GButton(icon: Ionicons.heart, text: "Liked"),
-            GButton(icon: Ionicons.cart, text: "Cart"),
-            GButton(icon: Ionicons.person, text: "Profile"),
-          ],
-          onTabChange: (index) {
-            setState(() {
-              _pageController.animateToPage(
-                index,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-              );
-              currentIndex = index;
-            });
-          },
-        ),
+    return Scaffold(
+      body: PageView(
+        onPageChanged:
+            (value) => setState(() {
+              currentIndex = value;
+            }),
+        controller: _pageController,
+        physics: NeverScrollableScrollPhysics(),
+        children: Pages,
+      ),
+      bottomNavigationBar: GNav(
+        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        backgroundColor: Colors.white,
+        activeColor: Colors.green,
+        gap: 6,
+        tabMargin: EdgeInsets.zero,
+        tabs: [
+          GButton(
+            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            icon: Iconsax.home_copy,
+            text: "Home",
+          ),
+          GButton(
+            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            icon: Iconsax.heart_copy,
+            text: "Likes",
+          ),
+          GButton(
+            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            icon: Iconsax.shopping_cart_copy,
+            text: "Cart",
+          ),
+          GButton(
+            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            icon: Iconsax.user_copy,
+            text: "Profile",
+          ),
+        ],
+        onTabChange: (index) {
+          setState(() {
+            _pageController.animateToPage(
+              index,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
+            currentIndex = index;
+          });
+        },
       ),
     );
   }

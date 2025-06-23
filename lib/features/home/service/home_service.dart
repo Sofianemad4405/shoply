@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:shopify/features/home/model/product_model.dart';
 

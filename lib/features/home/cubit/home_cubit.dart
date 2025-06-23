@@ -1,12 +1,17 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:shopify/features/Likes/cubit/likes_cubit.dart';
+import 'package:shopify/features/cart/cubits/cart_cubit.dart';
 import 'package:shopify/features/home/model/product_model.dart';
 import 'package:shopify/features/home/service/home_service.dart';
 
 part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
-  HomeCubit() : super(HomeLoading());
+  final LikesCubit likesCubit;
+  final CartCubit cartCubit;
+  HomeCubit({required this.cartCubit, required this.likesCubit})
+    : super(HomeLoading());
 
   bool isAsc = true;
 
@@ -15,7 +20,8 @@ class HomeCubit extends Cubit<HomeState> {
     try {
       final products = await HomeService().getAllProducts();
       for (var product in products) {
-        product.isLiked = LikesCubit().likedProductIds.contains(product.id);
+        product.isLiked = likesCubit.likedProductIds.contains(product.id);
+        product.isAddedToCart = cartCubit.cartProductIds.contains(product.id);
       }
       emit(HomeLoaded(products: products));
       return products;
@@ -30,7 +36,8 @@ class HomeCubit extends Cubit<HomeState> {
     try {
       final products = await HomeService().sortProductsByPrice(sortBy, order);
       for (var product in products) {
-        product.isLiked = LikesCubit().likedProductIds.contains(product.id);
+        product.isLiked = likesCubit.likedProductIds.contains(product.id);
+        product.isAddedToCart = cartCubit.cartProductIds.contains(product.id);
       }
       emit(HomeLoaded(products: products));
       return products;
