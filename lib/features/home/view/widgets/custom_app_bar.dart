@@ -5,7 +5,8 @@ import 'package:ionicons/ionicons.dart';
 import 'package:shopify/core/text_styles.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppBar({super.key});
+  const CustomAppBar({super.key, required this.location});
+  final String location;
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +18,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             Text("Delivery address", style: TextStyles.blackMedium),
             Row(
               children: [
-                Text(
-                  "Salatiga City, Central Java ",
-                  style: TextStyles.blackMedium,
-                ),
+                Text(location, style: TextStyles.blackMedium),
                 Icon(Icons.keyboard_arrow_down),
               ],
             ),

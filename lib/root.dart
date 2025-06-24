@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
@@ -7,14 +8,16 @@ import 'package:shopify/features/cart/view/cart.dart';
 import 'package:shopify/features/home/view/home_screen.dart';
 
 class Root extends StatefulWidget {
-  const Root({super.key});
+  const Root({super.key, required this.userData, required this.userCredential});
+
+  final Map<String, dynamic>? userData;
+  final UserCredential userCredential;
 
   @override
   State<Root> createState() => _RootState();
 }
 
 class _RootState extends State<Root> {
-  final List<Widget> Pages = [Home(), Likes(), Cart(), ProfileInfo()];
   final PageController _pageController = PageController(initialPage: 0);
   int currentIndex = 0;
 
@@ -39,7 +42,12 @@ class _RootState extends State<Root> {
             }),
         controller: _pageController,
         physics: NeverScrollableScrollPhysics(),
-        children: Pages,
+        children: [
+          Home(userData: widget.userData ?? {}),
+          Likes(),
+          Cart(),
+          ProfileInfo(userData: widget.userData ?? {}),
+        ],
       ),
       bottomNavigationBar: GNav(
         padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),

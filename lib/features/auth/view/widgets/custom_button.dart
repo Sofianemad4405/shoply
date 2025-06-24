@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final double width;
   final double height;
   final double borderRadius;
+  final bool isLoading;
 
   const CustomButton({
     super.key,
     required this.text,
-    required this.onPressed,
+    this.onPressed,
+    this.isLoading = false,
     this.width = double.infinity,
     this.height = 50,
     this.borderRadius = 12,
@@ -29,14 +31,22 @@ class CustomButton extends StatelessWidget {
           ),
         ),
         onPressed: onPressed,
-        child: Text(
-          text,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        child: isLoading
+            ? const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              )
+            : Text(
+                text,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
       ),
     );
   }

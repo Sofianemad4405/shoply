@@ -16,7 +16,8 @@ import 'package:shopify/features/home/view/widgets/product_details.dart';
 import 'package:shopify/features/search/view/search_view_page.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  const Home({super.key, required this.userData});
+  final Map<String, dynamic> userData;
 
   @override
   State<Home> createState() => _HomeState();
@@ -84,7 +85,9 @@ class _HomeState extends State<Home> {
                   Gap(40),
 
                   //app bar
-                  CustomAppBar(),
+                  CustomAppBar(
+                    location: widget.userData['location'] ?? "Zagazig city",
+                  ),
 
                   Gap(20),
 

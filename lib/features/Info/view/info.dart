@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:shopify/features/Info/cubits/cubit/profile_cubit.dart';
 
 class ProfileInfo extends StatefulWidget {
-  const ProfileInfo({super.key});
+  const ProfileInfo({super.key, required this.userData});
+  final Map<String, dynamic> userData;
 
   @override
   State<ProfileInfo> createState() => _ProfileInfoState();
@@ -58,7 +58,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Sofian Emad",
+                        widget.userData['name'] ?? "Sofian",
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 24,
@@ -91,7 +91,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        "@Bojjaan_krikc",
+                        "@${widget.userData['name'] ?? "Sofian"}",
                         style: TextStyle(
                           color: Colors.grey,
                           fontWeight: FontWeight.w400,
@@ -122,49 +122,49 @@ class _ProfileInfoState extends State<ProfileInfo> {
                       ),
                       Gap(3),
                       Text(
-                        "Salatiga, Central Java",
+                        widget.userData['location'] ?? "Not-Determined",
                         style: TextStyle(color: Colors.grey.shade800),
                       ),
                     ],
                   ),
 
                   //ngl row
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Icon(
-                            Ionicons.link_outline,
-                            color: Colors.grey.shade800,
-                            size: 20,
-                          ),
-                          Gap(3),
-                          Text(
-                            // https://ngl.link/kg_sofiiaaan1
-                            "ngl.link/kg_sofiiaaan1",
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Icon(
-                            Ionicons.calendar_outline,
-                            color: Colors.grey.shade800,
-                            size: 16,
-                          ),
-                          Gap(3),
-                          Text(
-                            "Born 4 Apr 2005",
-                            style: TextStyle(color: Colors.grey.shade800),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     Row(
+                  //       mainAxisAlignment: MainAxisAlignment.start,
+                  //       children: [
+                  //         Icon(
+                  //           Ionicons.link_outline,
+                  //           color: Colors.grey.shade800,
+                  //           size: 20,
+                  //         ),
+                  //         Gap(3),
+                  //         Text(
+                  //           // https://ngl.link/kg_sofiiaaan1
+                  //           "ngl.link/kg_sofiiaaan1",
+                  //           style: TextStyle(color: Colors.blue),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //     Row(
+                  //       mainAxisAlignment: MainAxisAlignment.start,
+                  //       children: [
+                  //         Icon(
+                  //           Ionicons.calendar_outline,
+                  //           color: Colors.grey.shade800,
+                  //           size: 16,
+                  //         ),
+                  //         Gap(3),
+                  //         Text(
+                  //           "Born 4 Apr 2005",
+                  //           style: TextStyle(color: Colors.grey.shade800),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ],
+                  // ),
                   Gap(10),
                   Row(
                     children: [

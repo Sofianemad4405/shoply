@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopify/features/Info/cubits/cubit/profile_cubit.dart';
 import 'package:shopify/features/Likes/cubit/likes_cubit.dart';
+import 'package:shopify/features/auth/cubit/auth_cubit.dart';
 import 'package:shopify/features/auth/view/sign_up_page.dart';
 import 'package:shopify/features/cart/cubits/cart_cubit.dart';
 import 'package:shopify/features/cart/cubits/cart_states.dart';
 import 'package:shopify/features/home/cubit/home_cubit.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:shopify/firebase_options.dart';
 
 void main() async {
@@ -37,6 +35,7 @@ class Shopify extends StatelessWidget {
               (context) =>
                   CartCubit(NoProductsState(message: "Your cart is empty")),
         ),
+        BlocProvider(create: (context) => AuthCubit()),
         BlocProvider(create: (context) => ProfileCubit()),
         BlocProvider(create: (context) => LikesCubit()),
         BlocProvider(
