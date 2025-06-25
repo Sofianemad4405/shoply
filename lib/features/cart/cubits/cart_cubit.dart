@@ -8,6 +8,8 @@ class CartCubit extends Cubit<CartStates> {
 
   List<Product> cartProducts = [];
   Set<int> cartProductIds = {};
+  Map<String, dynamic> userData = {};
+  double totalPrice = 0;
 
   void addProduct(Product product) {
     cartProducts.add(product);
@@ -21,6 +23,7 @@ class CartCubit extends Cubit<CartStates> {
     cartProductIds.remove(product.id);
     product.isAddedToCart = false;
     if (cartProducts.isEmpty) {
+      totalPrice = 0;
       emit(NoProductsState(message: "Cart is empty"));
     } else {
       emit(ProductsLoadedState(products: cartProducts));
@@ -30,6 +33,7 @@ class CartCubit extends Cubit<CartStates> {
   void clearCart() {
     cartProducts.clear();
     cartProductIds.clear();
+    totalPrice = 0;
     emit(NoProductsState(message: "Cart is empty"));
   }
 }

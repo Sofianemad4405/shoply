@@ -1,43 +1,77 @@
 import 'dart:developer';
 import 'package:bloc/bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
+import 'package:shopify/features/Info/model/user_model.dart';
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
 
-  Future<void> signUp(
-    String email,
-    String password,
-    Map<String, dynamic> userData,
-  ) async {
+  UserModel userData = UserModel(name: name, location: location);
+
+  Future<void> signUp({
+    required String email,
+    required String password,
+    required String name,
+    required String location,
+  }) async {
     emit(SignUpLoading());
     try {
       final userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
-      emit(SignUpSuccess(userCredential: userCredential, userData: userData));
+      final user = userCredential.user;
+      if (user != null) {
+        this.userData = userData;
+        saveUserData(user);
+        emit(SignUpSuccess(userCredential: userCredential));
+      } else {
+        emit(SignUpError("User is null"));
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        emit(SignInError('The password provided is too weak.'));
+        emit(SignUpError('The password provided is too weak.'));
       } else if (e.code == 'email-already-in-use') {
-        emit(SignInError('The account already exists for that email.'));
+        emit(SignUpError('The account already exists for that email.'));
       } else if (e.code == 'invalid-email') {
-        emit(SignInError('The email address is invalid.'));
+        emit(SignUpError('The email address is invalid.'));
       }
     } catch (e) {
-      emit(SignInError(e.toString()));
+      emit(SignUpError(e.toString()));
     }
   }
 
+  ///hive storage
+  void saveUserData(User user) async {
+    var userBox = Hive.box('userBox');
+    final userCredential = FirebaseAuth.instance.currentUser;
+
+    await userBox.put('email', user.email);
+    await userBox.put('name', user.displayName);
+    await userBox.put('phone', user.phoneNumber);
+    await userBox.put('location', user.email);
+    await userBox.put('isLoggedIn', true);
+    await userBox.put('userData', userData);
+    await userBox.put('userCredential', userCredential);
+
+    log("✅ User data saved to Hive.");
+  }
+
+  ///sign in
   Future<void> signIn(String email, String password) async {
     emit(SignInLoading());
     try {
       final userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
 
-      emit(SignInSuccess(userCredential: userCredential));
+      final user = userCredential.user;
+      if (user != null) {
+        saveUserData(user);
+        emit(SignInSuccess(userCredential: userCredential));
+      } else {
+        emit(SignInError("User is null"));
+      }
     } on FirebaseAuthException catch (e) {
       final errorMap = {
         'user-not-found': 'No user found for that email.',

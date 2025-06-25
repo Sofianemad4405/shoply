@@ -108,4 +108,36 @@ class HomeService {
       throw Exception('Error sorting products: $e');
     }
   }
+
+  Future<String> getGeminiResponse(String prompt) async {
+    final apiKey = 'AIzaSyAnxzrtBp3kmhECxKi7mZM5xLHw9SKLJEA';
+    final url = Uri.parse(
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=$apiKey',
+    );
+
+    final headers = {'Content-Type': 'application/json'};
+
+    final body = jsonEncode({
+      "contents": [
+        {
+          "parts": [
+            {"text": prompt},
+          ],
+        },
+      ],
+    });
+
+    final response = await http.post(url, headers: headers, body: body);
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final text = data['candidates'][0]['content']['parts'][0]['text'];
+      return "ana ${text}";
+    } else {
+      // لو فيه خطأ
+      log("Error: ${response.statusCode}");
+      log("Body: ${response.body}");
+      return "حدث خطأ أثناء الاتصال بـ Gemini API.";
+    }
+  }
 }

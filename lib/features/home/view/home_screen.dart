@@ -125,11 +125,17 @@ class _HomeState extends State<Home> {
 
                   //recent
                   Recent(
-                    sorted: sortMethod != "Not-Determined" ? true : false,
+                    sorted: sortMethod == "Not-Determined" ? true : false,
                     onIconTap: () {
                       log(context.read<HomeCubit>().isAsc.toString());
                       context.read<HomeCubit>().isAsc =
                           !context.read<HomeCubit>().isAsc;
+                      context.read<HomeCubit>().fetchProductsSorted(
+                        sortMethod,
+                        context.read<HomeCubit>().isAsc ? "asc" : "desc",
+                      );
+                      sortMethod = "Not-Determined";
+                      setState(() {});
                     },
                     sortBy: SortBy,
                     onTap: () {

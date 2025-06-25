@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shopify/core/text_styles.dart';
 
 class CategoryCard extends StatelessWidget {
   const CategoryCard({

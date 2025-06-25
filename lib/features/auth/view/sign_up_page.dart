@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:shopify/features/Info/model/user_model.dart';
 import 'package:shopify/features/auth/cubit/auth_cubit.dart';
 import 'package:shopify/features/auth/view/login_page.dart';
 import 'package:shopify/features/auth/view/widgets/custom_button.dart';
@@ -23,6 +24,11 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController password = TextEditingController();
   final TextEditingController confirmPassword = TextEditingController();
   final formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -199,16 +205,11 @@ class _SignUpPageState extends State<SignUpPage> {
                         text: "Sign Up",
                         onPressed: () {
                           if (formKey.currentState!.validate()) {
-                            log("Sofiannn");
-                            final userData = {
-                              'name': name.text,
-                              'location': location.text,
-                              'phone': phone.text,
-                            };
                             context.read<AuthCubit>().signUp(
-                              email.text,
-                              password.text,
-                              userData,
+                              email: email.text,
+                              password: password.text,
+                              name: name.text,
+                              location: location.text,
                             );
                           }
                         },
@@ -227,10 +228,15 @@ class _SignUpPageState extends State<SignUpPage> {
                               'location': location.text,
                               'phone': phone.text,
                             };
+                            UserModel user = UserModel(
+                              name: name.text,
+                              location: location.text,
+                            );
                             context.read<AuthCubit>().signUp(
-                              email.text,
-                              password.text,
-                              userData,
+                              email: email.text,
+                              password: password.text,
+                              name: name.text,
+                              location: location.text,
                             );
                             log(userData['email'].toString());
                             log(userData['name'].toString());
@@ -239,8 +245,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder:
-                                    (context) => LoginPage(userData: userData),
+                                builder: (context) => LoginPage(userData: user),
                               ),
                             );
                           }
@@ -264,7 +269,10 @@ class _SignUpPageState extends State<SignUpPage> {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => LoginPage(userData: {}),
+                          builder:
+                              (context) => LoginPage(
+                                userData: UserModel(name: "", location: ""),
+                              ),
                         ),
                       );
                     },
@@ -279,9 +287,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
-                        color:
-                            Colors
-                                .green[800], // نفس درجة الزر الأساسي بس أغمق شوية
+                        color: Colors.green[800],
                       ),
                     ),
                   ),

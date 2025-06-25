@@ -9,18 +9,21 @@ import 'package:shopify/features/cart/view/widgets/custom_circular_container.dar
 import 'package:shopify/features/home/view/widgets/product_details.dart';
 
 class Cart extends StatefulWidget {
-  const Cart({super.key});
+  const Cart({super.key, required this.userData});
+
+  final Map<String, dynamic> userData;
 
   @override
   State<Cart> createState() => _CartState();
 }
 
 class _CartState extends State<Cart> {
-  double totalPrice = 0;
   @override
   void initState() {
     for (int i = 0; i < context.read<CartCubit>().cartProducts.length; i++) {
-      totalPrice += context.read<CartCubit>().cartProducts[i].price!;
+      context.read<CartCubit>().totalPrice +=
+          context.read<CartCubit>().cartProducts[i].price! *
+          context.read<CartCubit>().cartProducts[i].qt!;
     }
     super.initState();
   }
@@ -63,7 +66,7 @@ class _CartState extends State<Cart> {
                         Row(
                           children: [
                             Text(
-                              "Salatiga City, Central Java ",
+                              "${widget.userData['location']}",
                               style: TextStyles.blackMedium,
                             ),
                             Icon(Icons.keyboard_arrow_down),
@@ -74,6 +77,7 @@ class _CartState extends State<Cart> {
                   ),
                   Gap(10),
                   Divider(),
+
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.54,
                     child: ListView.builder(
@@ -125,7 +129,9 @@ class _CartState extends State<Cart> {
                                       () => setState(() {
                                         if (product.qt! > 0) {
                                           product.qt = product.qt! - 1;
-                                          totalPrice -= product.price!;
+                                          context
+                                              .read<CartCubit>()
+                                              .totalPrice -= product.price!;
                                         }
                                       }),
                                   text: "-",
@@ -140,7 +146,8 @@ class _CartState extends State<Cart> {
                                   onTap:
                                       () => setState(() {
                                         product.qt = product.qt! + 1;
-                                        totalPrice += product.price!;
+                                        context.read<CartCubit>().totalPrice +=
+                                            product.price!;
                                       }),
                                   text: "+",
                                 ),
@@ -150,6 +157,8 @@ class _CartState extends State<Cart> {
                                     context.read<CartCubit>().removeProduct(
                                       product,
                                     );
+                                    context.read<CartCubit>().totalPrice -=
+                                        product.price! * product.qt!;
                                   },
                                   icon: Ionicons.trash,
                                 ),
@@ -160,6 +169,25 @@ class _CartState extends State<Cart> {
                       },
                     ),
                   ),
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            context.read<CartCubit>().clearCart();
+                          },
+                          child: Text(
+                            "Clear Cart",
+                            style: TextStyles.blackMedium,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
                   Divider(),
                   Gap(10),
                   Padding(
@@ -171,7 +199,7 @@ class _CartState extends State<Cart> {
                             Text("Total ", style: TextStyles.blackMedium),
                             Spacer(),
                             Text(
-                              "\$${totalPrice.ceil()}",
+                              "\$${context.read<CartCubit>().totalPrice.ceil()}",
                               style: TextStyles.blackMedium,
                             ),
                           ],

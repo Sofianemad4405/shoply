@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter/material.dart';
 import 'package:shopify/features/Likes/cubit/likes_cubit.dart';
 import 'package:shopify/features/cart/cubits/cart_cubit.dart';
 import 'package:shopify/features/home/model/product_model.dart';

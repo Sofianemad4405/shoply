@@ -1,23 +1,47 @@
-class Product {
+import 'package:hive/hive.dart';
+part 'product_model.g.dart';
+
+@HiveType(typeId: 0)
+class Product extends HiveObject {
+  @HiveField(0)
   final int id;
+  @HiveField(1)
   final String? thumbnail;
+  @HiveField(2)
   final String? title;
+  @HiveField(3)
   final String? description;
+  @HiveField(4)
   final double? price;
+  @HiveField(5)
   final double? discountPercentage;
+  @HiveField(6)
   final num? rating;
+  @HiveField(7)
   final int stock;
+  @HiveField(8)
   final List<String>? tags;
+  @HiveField(9)
   final String? brand;
+  @HiveField(10)
   final Map<String, double>? dimensions;
+  @HiveField(11)
   final String? warrantyInformation;
+  @HiveField(12)
   final String? shippingInformation;
+  @HiveField(13)
   final String? availabilityStatus;
+  @HiveField(14)
   final List<Review>? reviews;
+  @HiveField(15)
   final List<String>? images;
+  @HiveField(16)
   final Meta? meta;
+  @HiveField(17)
   int? qt;
+  @HiveField(18)
   bool isLiked;
+  @HiveField(19)
   bool isAddedToCart;
 
   Product({
@@ -82,11 +106,45 @@ class Product {
   }
 }
 
-class Review {
+@HiveType(typeId: 1)
+class Meta extends HiveObject {
+  @HiveField(0)
+  final String createdAt;
+  @HiveField(1)
+  final String updatedAt;
+  @HiveField(2)
+  final String barcode;
+  @HiveField(3)
+  final String qrCode;
+
+  Meta({
+    required this.createdAt,
+    required this.updatedAt,
+    required this.barcode,
+    required this.qrCode,
+  });
+
+  factory Meta.fromJson(Map<String, dynamic> json) {
+    return Meta(
+      createdAt: json["createdAt"],
+      updatedAt: json["updatedAt"],
+      barcode: json["barcode"],
+      qrCode: json["qrCode"],
+    );
+  }
+}
+
+@HiveType(typeId: 2)
+class Review extends HiveObject {
+  @HiveField(0)
   final int rating;
+  @HiveField(1)
   final String comment;
+  @HiveField(2)
   final String date;
+  @HiveField(3)
   final String reviewerName;
+  @HiveField(4)
   final String reviewerEmail;
 
   Review({
@@ -107,38 +165,3 @@ class Review {
     );
   }
 }
-
-class Meta {
-  final String createdAt;
-  final String updatedAt;
-  final String barcode;
-  final String qrCode;
-
-  Meta({
-    required this.createdAt,
-    required this.updatedAt,
-    required this.barcode,
-    required this.qrCode,
-  });
-
-  factory Meta.fromJson(Map<String, dynamic> json) {
-    return Meta(
-      createdAt: json["createdAt"],
-      updatedAt: json["updatedAt"],
-      barcode: json["barcode"],
-      qrCode: json["qrCode"],
-    );
-  }
-}
-
-// class Category {
-//   final String slug;
-//   final String name;
-//   final String url;
-
-//   Category({required this.slug, required this.name, required this.url});
-
-//   factory Category.fromJson(Map<String, dynamic> json) {
-//     return Category(slug: json["slug"], name: json["name"], url: json["url"]);
-//   }
-// }

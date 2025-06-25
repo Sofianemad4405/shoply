@@ -15,6 +15,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     followedBrands: [],
     following: 0,
   );
+  Map<String, dynamic> userData = {};
   ProfileCubit() : super(ProfileInitial());
 
   void addBrandToFollowing() {

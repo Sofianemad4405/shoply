@@ -8,9 +8,27 @@ import 'package:shopify/features/cart/view/cart.dart';
 import 'package:shopify/features/home/view/home_screen.dart';
 
 class Root extends StatefulWidget {
-  const Root({super.key, required this.userData, required this.userCredential});
+  const Root({
+    super.key,
+    required this.name,
+    required this.location,
+    required this.bio,
+    required this.birthDate,
+    required this.userName,
+    required this.profileImage,
+    required this.followedBrands,
+    required this.following,
+    required this.userCredential,
+  });
 
-  final Map<String, dynamic>? userData;
+  final String name;
+  final String location;
+  final String bio;
+  final String birthDate;
+  final String userName;
+  final String profileImage;
+  final List<String> followedBrands;
+  final int following;
   final UserCredential userCredential;
 
   @override
@@ -45,7 +63,7 @@ class _RootState extends State<Root> {
         children: [
           Home(userData: widget.userData ?? {}),
           Likes(),
-          Cart(),
+          Cart(userData: widget.userData ?? {}),
           ProfileInfo(userData: widget.userData ?? {}),
         ],
       ),

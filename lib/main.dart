@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:shopify/features/Info/cubits/cubit/profile_cubit.dart';
 import 'package:shopify/features/Likes/cubit/likes_cubit.dart';
 import 'package:shopify/features/auth/cubit/auth_cubit.dart';
@@ -8,19 +11,37 @@ import 'package:shopify/features/cart/cubits/cart_cubit.dart';
 import 'package:shopify/features/cart/cubits/cart_states.dart';
 import 'package:shopify/features/home/cubit/home_cubit.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:shopify/features/home/model/product_model.dart';
 import 'package:shopify/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   try {
+    // Initialize Hive
+    await Hive.initFlutter();
+    log("✅ Hive Initialized");
+
+    // Register Adapters
+    Hive.registerAdapter(ProductAdapter());
+    // Open Boxes
+    await Hive.openBox('userBox');
+    await Hive.openBox<Product>('likedBox');
+    await Hive.openBox<Product>('cartBox');
+
+    log("✅ Hive Boxes Opened Successfully");
+
+    // Initialize Firebase
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    print("Firebase Initialized Successfully");
-  } catch (e) {
-    print("Error initializing Firebase: $e");
+    log("✅ Firebase Initialized Successfully");
+
+    runApp(const Shopify());
+  } catch (e, s) {
+    log("❌ Initialization Error: $e");
+    log("❌ Stacktrace: $s");
   }
-  runApp(const Shopify());
 }
 
 class Shopify extends StatelessWidget {
