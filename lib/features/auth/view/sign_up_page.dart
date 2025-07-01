@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:shopify/features/Info/cubits/cubit/profile_cubit.dart';
 import 'package:shopify/features/Info/model/user_model.dart';
 import 'package:shopify/features/auth/cubit/auth_cubit.dart';
 import 'package:shopify/features/auth/view/login_page.dart';
@@ -27,6 +28,12 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   void initState() {
+    // if (Prefs.getBool(Constants.kisLoggedIn) == true) {
+    //   Navigator.pushReplacement(
+    //     context,
+    //     MaterialPageRoute(builder: (_) => Root()),
+    //   );
+    // }
     super.initState();
   }
 
@@ -189,16 +196,16 @@ class _SignUpPageState extends State<SignUpPage> {
                     );
                   }
                   if (state is SignUpError) {
-                    if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          behavior: SnackBarBehavior.floating,
-                          backgroundColor: Colors.red,
-                          duration: const Duration(seconds: 2),
-                          content: Text(state.message),
-                        ),
-                      );
-                    }
+                    // if (mounted) {
+                    //   ScaffoldMessenger.of(context).showSnackBar(
+                    //     SnackBar(
+                    //       behavior: SnackBarBehavior.floating,
+                    //       backgroundColor: Colors.red,
+                    //       duration: const Duration(seconds: 2),
+                    //       content: Text(state.message),
+                    //     ),
+                    //   );
+                    // }
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: CustomButton(
@@ -242,6 +249,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             log(userData['name'].toString());
                             log(userData['location'].toString());
                             log(userData['phone'].toString());
+                            context.read<ProfileCubit>().user = user;
                             Navigator.push(
                               context,
                               MaterialPageRoute(

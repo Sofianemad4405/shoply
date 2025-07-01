@@ -3,6 +3,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:shopify/core/constants.dart';
+import 'package:shopify/core/prefs.dart';
+import 'package:shopify/features/Info/model/user_model.dart';
 import 'package:shopify/features/auth/cubit/auth_cubit.dart';
 import 'package:shopify/features/auth/view/sign_up_page.dart';
 import 'package:shopify/features/auth/view/widgets/custom_button.dart';
@@ -12,7 +15,7 @@ import 'package:shopify/root.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key, required this.userData});
 
-  final Map<String, dynamic> userData;
+  final UserModel userData;
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -98,7 +101,8 @@ class _LoginPageState extends State<LoginPage> {
                     }
                   }
                   if (state is SignInSuccess) {
-                    Navigator.pushReplacement(
+                    // Prefs.setBool(Constants.kisLoggedIn, false);
+                    Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
                         builder:
@@ -107,6 +111,14 @@ class _LoginPageState extends State<LoginPage> {
                               userCredential: state.userCredential,
                             ),
                       ),
+                      (route) => false,
+                    );
+                  }
+                  if (state is Logout) {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (_) => const SignUpPage()),
+                      (route) => false,
                     );
                   }
                 },
@@ -152,9 +164,10 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(width: 6),
                   TextButton(
                     onPressed: () {
-                      Navigator.pushReplacement(
+                      Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(builder: (_) => const SignUpPage()),
+                        (route) => false,
                       );
                     },
                     style: TextButton.styleFrom(

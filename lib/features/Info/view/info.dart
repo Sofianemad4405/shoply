@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:shopify/features/Info/cubits/cubit/profile_cubit.dart';
+import 'package:shopify/features/Info/model/user_model.dart';
 
 class ProfileInfo extends StatefulWidget {
-  const ProfileInfo({super.key, required this.userData});
-  final Map<String, dynamic> userData;
+  const ProfileInfo({super.key});
 
   @override
   State<ProfileInfo> createState() => _ProfileInfoState();
@@ -58,7 +58,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        widget.userData['name'] ?? "Sofian",
+                        context.read<ProfileCubit>().user.name,
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 24,
@@ -91,7 +91,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        "@${widget.userData['name'] ?? "Sofian"}",
+                        "@${context.read<ProfileCubit>().user.name}",
                         style: TextStyle(
                           color: Colors.grey,
                           fontWeight: FontWeight.w400,
@@ -122,7 +122,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
                       ),
                       Gap(3),
                       Text(
-                        widget.userData['location'] ?? "Not-Determined",
+                        context.read<ProfileCubit>().user.location,
                         style: TextStyle(color: Colors.grey.shade800),
                       ),
                     ],
@@ -169,7 +169,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
                   Row(
                     children: [
                       Text(
-                        "${context.read<ProfileCubit>().brands.length} ",
+                        "${context.read<ProfileCubit>().user.followedBrands?.length} ",
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,

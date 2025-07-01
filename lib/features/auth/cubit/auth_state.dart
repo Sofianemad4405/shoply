@@ -47,3 +47,5 @@ final class SignInError extends AuthState {
 
   SignInError(this.message);
 }
+
+final class Logout extends AuthState {}

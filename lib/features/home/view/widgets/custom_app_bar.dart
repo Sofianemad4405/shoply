@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
+import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:shopify/core/text_styles.dart';
+import 'package:shopify/features/auth/cubit/auth_cubit.dart';
+import 'package:shopify/features/auth/view/sign_up_page.dart';
 import 'package:shopify/features/home/service/home_service.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -28,15 +32,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         Spacer(),
         Row(
           children: [
-            Icon(Ionicons.cart_outline, size: 24),
-            Gap(15),
             GestureDetector(
               onTap: () {
-                HomeService().getGeminiResponse(
-                  "عايز اعرف مين كسب كاس العالم 2022",
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SignUpPage()),
+                  (route) => false,
                 );
               },
-              child: Icon(FontAwesomeIcons.bell, size: 24),
+              child: Icon(Icons.logout, size: 24),
             ),
           ],
         ),

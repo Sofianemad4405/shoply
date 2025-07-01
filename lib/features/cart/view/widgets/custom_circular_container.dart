@@ -16,6 +16,7 @@ class _CustomCircularContainerState extends State<CustomCircularContainer> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onLongPress: widget.onTap,
       onTap: widget.onTap,
       child: Container(
         height: 30,

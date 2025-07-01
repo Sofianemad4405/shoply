@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shopify/features/Likes/cubit/likes_cubit.dart';
+import 'package:shopify/features/cart/cubits/cart_cubit.dart';
 import 'package:shopify/features/home/model/product_model.dart';
 import 'package:shopify/features/home/service/home_service.dart';
 import 'package:shopify/features/home/view/widgets/product_card.dart';
+import 'package:shopify/features/home/view/widgets/product_details.dart';
 
 class SearchViewPage extends StatefulWidget {
   const SearchViewPage({
@@ -56,10 +60,48 @@ class _SearchViewPageState extends State<SearchViewPage> {
                       mainAxisSpacing: 10,
                       childAspectRatio:
                           MediaQuery.of(context).size.width /
-                          (MediaQuery.of(context).size.height * 0.7),
+                          (MediaQuery.of(context).size.height * 0.6),
                     ),
                     itemBuilder: (context, index) {
-                      return ProductCard(product: products[index]);
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) =>
+                                      ProductDetails(product: products[index]),
+                            ),
+                          );
+                        },
+                        child: ProductCard(
+                          product: products[index],
+                          onAddToCart: (product) {
+                            context.read<CartCubit>().addProduct(
+                              product,
+                              products,
+                            );
+                          },
+                          onRemoveFromCart: (product) {
+                            context.read<CartCubit>().removeProduct(
+                              product,
+                              products,
+                            );
+                          },
+                          onAddToLikes: (product) {
+                            context.read<LikesCubit>().addProductToLikes(
+                              product,
+                              products,
+                            );
+                          },
+                          onRemoveFromLikes: (product) {
+                            context.read<LikesCubit>().removeFromLiked(
+                              product,
+                              products,
+                            );
+                          },
+                        ),
+                      );
                     },
                   );
             } else {

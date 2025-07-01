@@ -1,27 +1,36 @@
-class User {
+import 'package:hive/hive.dart';
+part 'user_model.g.dart';
+
+@HiveType(typeId: 3)
+class UserModel extends HiveObject {
+  @HiveField(0)
   final String name;
+  @HiveField(1)
   final String location;
-  final String bio;
-  final String birthDate;
-  final String userName;
-  final String profileImage;
-  final List<Brand> followedBrands;
+  @HiveField(2)
+  final String? bio;
+  @HiveField(3)
+  final String? profileImage;
+  @HiveField(4)
+  final List<Brand>? followedBrands;
+  @HiveField(5)
   int following;
 
-  User({
-    required this.bio,
-    required this.following,
+  UserModel({
+    this.following = 0,
     required this.name,
     required this.location,
-    required this.birthDate,
-    required this.userName,
-    required this.profileImage,
-    required this.followedBrands,
+    this.bio,
+    this.profileImage,
+    this.followedBrands,
   });
 }
 
-class Brand {
+@HiveType(typeId: 4)
+class Brand extends HiveObject {
+  @HiveField(0)
   final int id;
+  @HiveField(1)
   final String name;
 
   Brand({required this.id, required this.name});

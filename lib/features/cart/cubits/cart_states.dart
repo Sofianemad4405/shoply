@@ -1,15 +1,22 @@
 import 'package:shopify/features/home/model/product_model.dart';
 
-abstract class CartStates {}
+abstract class CartState {}
 
-class NoProductsState extends CartStates {
-  final String message;
+class CartInitialState extends CartState {}
 
-  NoProductsState({required this.message});
+class CartLoadingState extends CartState {}
+
+class CartLoadedState extends CartState {
+  final List<Product> cartProducts;
+  CartLoadedState({required this.cartProducts});
 }
 
-class ProductsLoadedState extends CartStates {
-  final List<Product> products;
+class NoCartProductsState extends CartState {
+  final String message;
+  NoCartProductsState({required this.message});
+}
 
-  ProductsLoadedState({required this.products});
+class CartErrorState extends CartState {
+  final String error;
+  CartErrorState({required this.error});
 }

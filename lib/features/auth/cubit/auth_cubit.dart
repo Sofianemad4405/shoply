@@ -9,8 +9,16 @@ part 'auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
 
-  UserModel userData = UserModel(name: name, location: location);
+  UserModel userData = UserModel(
+    name: "",
+    location: "",
+    bio: "",
+    profileImage: "",
+    followedBrands: [],
+    following: 0,
+  );
 
+  // ========== SIGN UP ==========
   Future<void> signUp({
     required String email,
     required String password,
@@ -23,72 +31,65 @@ class AuthCubit extends Cubit<AuthState> {
           .createUserWithEmailAndPassword(email: email, password: password);
       final user = userCredential.user;
       if (user != null) {
-        this.userData = userData;
-        saveUserData(user);
+        userData = UserModel(
+          name: name,
+          location: location,
+          bio: "",
+          profileImage: "",
+          followedBrands: [],
+          following: 0,
+        );
+        await saveUserData(userData);
         emit(SignUpSuccess(userCredential: userCredential));
       } else {
         emit(SignUpError("User is null"));
       }
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        emit(SignUpError('The password provided is too weak.'));
-      } else if (e.code == 'email-already-in-use') {
-        emit(SignUpError('The account already exists for that email.'));
-      } else if (e.code == 'invalid-email') {
-        emit(SignUpError('The email address is invalid.'));
-      }
+      final map = {
+        'weak-password': 'The password provided is too weak.',
+        'email-already-in-use': 'The account already exists for that email.',
+        'invalid-email': 'The email address is invalid.',
+      };
+      emit(SignUpError(map[e.code] ?? e.message ?? 'Unknown error'));
     } catch (e) {
       emit(SignUpError(e.toString()));
     }
   }
 
-  ///hive storage
-  void saveUserData(User user) async {
-    var userBox = Hive.box('userBox');
-    final userCredential = FirebaseAuth.instance.currentUser;
+  Future<void> logout() async {
+    log("logged out");
+    await FirebaseAuth.instance.signOut();
+    emit(Logout());
+  }
 
-    await userBox.put('email', user.email);
-    await userBox.put('name', user.displayName);
-    await userBox.put('phone', user.phoneNumber);
-    await userBox.put('location', user.email);
+  // ========== HIVE STORAGE ==========
+  Future<void> saveUserData(UserModel user) async {
+    final userBox = Hive.box('userBox');
     await userBox.put('isLoggedIn', true);
-    await userBox.put('userData', userData);
-    await userBox.put('userCredential', userCredential);
-
+    await userBox.put('userData', user);
     log("✅ User data saved to Hive.");
   }
 
-  ///sign in
+  // ========== SIGN IN ==========
   Future<void> signIn(String email, String password) async {
     emit(SignInLoading());
     try {
+      log("Signed in Successfully");
       final userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
-
-      final user = userCredential.user;
-      if (user != null) {
-        saveUserData(user);
-        emit(SignInSuccess(userCredential: userCredential));
-      } else {
-        emit(SignInError("User is null"));
-      }
+      emit(SignInSuccess(userCredential: userCredential));
     } on FirebaseAuthException catch (e) {
-      final errorMap = {
+      final map = {
         'user-not-found': 'No user found for that email.',
-        'wrong-password': 'Wrong password provided for that user.',
+        'wrong-password': 'Wrong password provided.',
         'invalid-email': 'The email address is invalid.',
         'user-disabled': 'This account has been disabled.',
-        'too-many-requests': 'Too many attempts. Please try again later.',
-        'operation-not-allowed': 'Email/password accounts are not enabled.',
+        'too-many-requests': 'Too many attempts. Try again later.',
+        'operation-not-allowed': 'Email/password accounts not enabled.',
       };
-
-      final errorMessage =
-          errorMap[e.code] ?? 'An error occurred during login.';
-      log('Authentication error: ${e.code} - $errorMessage');
-      emit(SignInError(errorMessage));
+      emit(SignInError(map[e.code] ?? e.message ?? 'Login error'));
     } catch (e) {
-      log('Unexpected error: $e');
-      emit(SignInError('An unexpected error occurred: ${e.toString()}'));
+      emit(SignInError('Unexpected error: $e'));
     }
   }
 }

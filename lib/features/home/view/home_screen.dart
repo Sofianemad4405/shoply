@@ -3,6 +3,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:shopify/features/Info/cubits/cubit/profile_cubit.dart';
+import 'package:shopify/features/Likes/cubit/likes_cubit.dart';
+import 'package:shopify/features/cart/cubits/cart_cubit.dart';
 import 'package:shopify/features/home/cubit/home_cubit.dart';
 import 'package:shopify/features/home/service/home_service.dart';
 import 'package:shopify/features/home/view/categories_page.dart';
@@ -16,8 +19,7 @@ import 'package:shopify/features/home/view/widgets/product_details.dart';
 import 'package:shopify/features/search/view/search_view_page.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key, required this.userData});
-  final Map<String, dynamic> userData;
+  const Home({super.key});
 
   @override
   State<Home> createState() => _HomeState();
@@ -30,10 +32,8 @@ class _HomeState extends State<Home> {
     super.initState();
   }
 
-  final SortBy = ["price", "rating", "title"];
-
+  final SortBy = ["price", "rating", "title", "all"];
   String sortMethod = "Not-Determined";
-
   int currentIndex = 0;
   PageController controller = PageController();
 
@@ -78,6 +78,7 @@ class _HomeState extends State<Home> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: CustomScrollView(
+          physics: ClampingScrollPhysics(),
           slivers: [
             SliverToBoxAdapter(
               child: Column(
@@ -86,7 +87,7 @@ class _HomeState extends State<Home> {
 
                   //app bar
                   CustomAppBar(
-                    location: widget.userData['location'] ?? "Zagazig city",
+                    location: context.read<ProfileCubit>().user.location,
                   ),
 
                   Gap(20),
@@ -125,7 +126,7 @@ class _HomeState extends State<Home> {
 
                   //recent
                   Recent(
-                    sorted: sortMethod == "Not-Determined" ? true : false,
+                    sorted: sortMethod == "Not-Determined" ? false : true,
                     onIconTap: () {
                       log(context.read<HomeCubit>().isAsc.toString());
                       context.read<HomeCubit>().isAsc =
@@ -134,14 +135,24 @@ class _HomeState extends State<Home> {
                         sortMethod,
                         context.read<HomeCubit>().isAsc ? "asc" : "desc",
                       );
-                      sortMethod = "Not-Determined";
                       setState(() {});
                     },
                     sortBy: SortBy,
-                    onTap: () {
-                      showSortingOptions(context);
+                    onSelected: (selected) {
+                      if (selected == "all") {
+                        context.read<HomeCubit>().fetchAllProducts();
+                        sortMethod = "Not-Determined";
+                        return;
+                      }
+                      context.read<HomeCubit>().fetchProductsSorted(
+                        selected,
+                        context.read<HomeCubit>().isAsc ? "asc" : "desc",
+                      );
+                      sortMethod = selected;
+                      setState(() {});
                     },
                   ),
+
                   Gap(20),
 
                   //recent products grid
@@ -154,7 +165,7 @@ class _HomeState extends State<Home> {
                         return Center(child: Text(state.message));
                       }
                       if (state is HomeLoaded) {
-                        final products = state.products;
+                        final products = state.products.values.toList();
                         return GridView.builder(
                           padding: EdgeInsets.zero,
                           physics: NeverScrollableScrollPhysics(),
@@ -166,7 +177,7 @@ class _HomeState extends State<Home> {
                                 mainAxisSpacing: 12,
                                 childAspectRatio:
                                     (MediaQuery.of(context).size.width / 2) /
-                                    (MediaQuery.of(context).size.height * 0.34),
+                                    (MediaQuery.of(context).size.height * 0.3),
                               ),
 
                           shrinkWrap: true,
@@ -178,12 +189,58 @@ class _HomeState extends State<Home> {
                                   context,
                                   MaterialPageRoute(
                                     builder:
-                                        (context) =>
-                                            ProductDetails(product: product),
+                                        (context) => ProductDetails(
+                                          isLiked: context
+                                              .read<LikesCubit>()
+                                              .isProductLiked(product.id),
+                                          product: product,
+                                          onAddToLikes: (product) {
+                                            context
+                                                .read<LikesCubit>()
+                                                .addProductToLikes(
+                                                  product,
+                                                  products,
+                                                );
+                                          },
+                                          onRemoveFromLikes: (product) {
+                                            context
+                                                .read<LikesCubit>()
+                                                .removeFromLiked(
+                                                  product,
+                                                  products,
+                                                );
+                                          },
+                                        ),
                                   ),
                                 );
                               },
-                              child: ProductCard(product: product),
+                              child: ProductCard(
+                                product: product,
+                                onAddToCart: (product) {
+                                  context.read<CartCubit>().addProduct(
+                                    product,
+                                    products,
+                                  );
+                                },
+                                onRemoveFromCart: (product) {
+                                  context.read<CartCubit>().removeProduct(
+                                    product,
+                                    products,
+                                  );
+                                },
+                                onAddToLikes: (product) {
+                                  context.read<LikesCubit>().addProductToLikes(
+                                    product,
+                                    products,
+                                  );
+                                },
+                                onRemoveFromLikes: (product) {
+                                  context.read<LikesCubit>().removeFromLiked(
+                                    product,
+                                    products,
+                                  );
+                                },
+                              ),
                             );
                           },
                         );
@@ -201,52 +258,27 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Future<dynamic> showSortingOptions(BuildContext context) {
-    return showModalBottomSheet(
+  Future<void> showSortingOptions(BuildContext context, Offset position) async {
+    final selected = await showMenu<String>(
       context: context,
-      isScrollControlled: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+      position: RelativeRect.fromLTRB(
+        position.dx,
+        position.dy,
+        position.dx,
+        position.dy,
       ),
-      builder: (context) {
-        return Container(
-          height: MediaQuery.of(context).size.height * 0.3,
-          padding: EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    "Sort By",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              SizedBox(height: 16),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: SortBy.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      onTap: () {
-                        final sortBy = SortBy[index];
-                        context.read<HomeCubit>().fetchProductsSorted(
-                          sortBy,
-                          context.read<HomeCubit>().isAsc ? "asc" : "desc",
-                        );
-                        sortMethod = sortBy;
-                        Navigator.pop(context, sortBy);
-                      },
-                      title: Text(SortBy[index]),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+      items:
+          SortBy.map(
+            (option) =>
+                PopupMenuItem<String>(value: option, child: Text(option)),
+          ).toList(),
     );
+
+    if (selected != null) {
+      context.read<HomeCubit>().fetchProductsSorted(
+        selected,
+        context.read<HomeCubit>().isAsc ? "asc" : "desc",
+      );
+    }
   }
 }

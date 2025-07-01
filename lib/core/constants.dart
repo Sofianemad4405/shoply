@@ -70,6 +70,6 @@ class Constants {
   static List<Product> likedProducts = [];
   static String holderImage =
       "https://as2.ftcdn.net/v2/jpg/05/27/29/95/1000_F_527299569_vYLOucMAr1oz52CRaQbZNC3tIjtiEwaY.jpg";
-
   static List<Product> cartProducts = [];
+  // static String kisLoggedIn = "isLoggedIn";
 }

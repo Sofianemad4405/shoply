@@ -7,7 +7,7 @@ final class HomeInitial extends HomeState {}
 final class HomeLoading extends HomeState {}
 
 final class HomeLoaded extends HomeState {
-  final List<Product> products;
+  Map<dynamic, Product> products;
   HomeLoaded({required this.products});
 }
 

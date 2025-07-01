@@ -3,16 +3,17 @@ import 'package:flutter/material.dart';
 class Recent extends StatelessWidget {
   const Recent({
     super.key,
-    required this.onTap,
     required this.sortBy,
     required this.onIconTap,
+    required this.onSelected,
     this.sorted = false,
   });
 
   final List<String> sortBy;
-  final VoidCallback onTap;
   final VoidCallback onIconTap;
   final bool sorted;
+
+  final void Function(String) onSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +34,21 @@ class Recent extends StatelessWidget {
               icon: Icon(Icons.change_circle_rounded, color: Colors.grey),
             )
             : SizedBox.shrink(),
-        GestureDetector(
-          onTap: onTap,
+
+        // NEW PopupMenuButton here
+        PopupMenuButton<String>(
+          tooltip: "Sort By",
+          onSelected: onSelected,
+          itemBuilder:
+              (context) =>
+                  sortBy
+                      .map(
+                        (option) => PopupMenuItem<String>(
+                          value: option,
+                          child: Text(option),
+                        ),
+                      )
+                      .toList(),
           child: Row(
             children: [
               Icon(Icons.filter_list, color: Colors.grey),

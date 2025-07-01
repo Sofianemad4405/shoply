@@ -7,13 +7,22 @@ import 'package:ionicons/ionicons.dart';
 import 'package:shopify/core/constants.dart';
 import 'package:shopify/core/text_styles.dart';
 import 'package:shopify/features/Info/cubits/cubit/profile_cubit.dart';
+import 'package:shopify/features/Likes/cubit/likes_cubit.dart';
 import 'package:shopify/features/home/model/product_model.dart';
 import 'package:shopify/features/home/view/widgets/review_list_tile.dart';
 
 class ProductDetails extends StatefulWidget {
-  const ProductDetails({super.key, required this.product});
+  const ProductDetails({
+    super.key,
+    required this.product,
+    this.onAddToLikes,
+    this.onRemoveFromLikes,
+    this.isLiked,
+  });
   final Product product;
-
+  final void Function(Product product)? onAddToLikes;
+  final void Function(Product product)? onRemoveFromLikes;
+  final bool? isLiked;
   @override
   State<ProductDetails> createState() => _ProductDetailsState();
 }
@@ -99,11 +108,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                       Spacer(),
                       GestureDetector(
                         onTap: () {
-                          log(widget.product.meta?.barcode ?? "");
                           setState(() {
-                            Constants.likedProducts.add(widget.product);
-                            isFavorite = !isFavorite;
+                            widget.product.isLiked = !widget.product.isLiked;
                           });
+                          widget.product.isLiked
+                              ? widget.onAddToLikes!(widget.product)
+                              : widget.onRemoveFromLikes!(widget.product);
                         },
                         child: Container(
                           height: 50,
@@ -113,10 +123,17 @@ class _ProductDetailsState extends State<ProductDetails> {
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
-                            isFavorite
+                            context.read<LikesCubit>().isProductLiked(
+                                  widget.product.id,
+                                )
                                 ? Ionicons.heart
                                 : Ionicons.heart_outline,
-                            color: isFavorite ? Colors.red : Colors.black38,
+                            color:
+                                context.read<LikesCubit>().isProductLiked(
+                                      widget.product.id,
+                                    )
+                                    ? Colors.red
+                                    : Colors.black38,
                             size: 28,
                           ),
                         ),
@@ -183,42 +200,55 @@ class _ProductDetailsState extends State<ProductDetails> {
                       ),
 
                       //follow button
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isFollowed = !isFollowed;
-                          });
-                          if (isFollowed) {
-                            context.read<ProfileCubit>().addBrandToFollowing();
-                          } else {
-                            context
-                                .read<ProfileCubit>()
-                                .removeBrandFromFollowing();
-                          }
-                        },
-                        child: Container(
-                          width: 100,
-                          height: 35,
-                          decoration: BoxDecoration(
-                            color:
-                                !isFollowed
-                                    ? const Color.fromARGB(255, 242, 242, 242)
-                                    : Colors.green,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Center(
-                            child: Text(
-                              !isFollowed ? "Follow" : "Following",
-                              style: TextStyle(
+                      widget.product.brand == "Unknown Brand"
+                          ? SizedBox.shrink()
+                          : GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isFollowed = !isFollowed;
+                              });
+                              if (isFollowed) {
+                                context
+                                    .read<ProfileCubit>()
+                                    .addBrandToFollowing(widget.product.brand!);
+                              } else {
+                                context
+                                    .read<ProfileCubit>()
+                                    .removeBrandFromFollowing(
+                                      widget.product.brand!,
+                                    );
+                              }
+                            },
+                            child: Container(
+                              width: 100,
+                              height: 35,
+                              decoration: BoxDecoration(
                                 color:
-                                    !isFollowed ? Colors.black : Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
+                                    !isFollowed
+                                        ? const Color.fromARGB(
+                                          255,
+                                          242,
+                                          242,
+                                          242,
+                                        )
+                                        : Colors.green,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  !isFollowed ? "Follow" : "Following",
+                                  style: TextStyle(
+                                    color:
+                                        !isFollowed
+                                            ? Colors.black
+                                            : Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
                     ],
                   ),
 

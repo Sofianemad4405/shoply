@@ -4,29 +4,29 @@ import 'package:shopify/features/Info/model/user_model.dart';
 part 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
-  List<String> brands = [];
-  User user = User(
+  List<Brand> brands = [];
+  UserModel user = UserModel(
     name: "",
     location: "",
     bio: "",
-    birthDate: "",
-    userName: "",
     profileImage: "",
     followedBrands: [],
     following: 0,
   );
-  Map<String, dynamic> userData = {};
   ProfileCubit() : super(ProfileInitial());
 
-  void addBrandToFollowing() {
-    user.followedBrands.add(Brand(name: brands.last, id: brands.length));
+  void addBrandToFollowing(String brandName) {
+    user.followedBrands?.add(Brand(name: brandName, id: brands.length));
     user.following = user.following + 1;
-    emit(ProfileLoaded(brands: brands, user: user));
+    brands.add(Brand(name: brandName, id: brands.length));
+    emit(ProfileLoaded(brands: user.followedBrands, user: user));
   }
 
-  void removeBrandFromFollowing() {
-    user.followedBrands.remove(Brand(name: brands.last, id: brands.length));
+  void removeBrandFromFollowing(String brandName) {
+    emit(ProfileLoading());
+    user.followedBrands?.remove(Brand(name: brandName, id: brands.length));
     user.following = user.following - 1;
-    emit(ProfileLoaded(brands: brands, user: user));
+    brands.remove(Brand(name: brandName, id: brands.length));
+    emit(ProfileLoaded(brands: user.followedBrands, user: user));
   }
 }

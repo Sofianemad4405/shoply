@@ -2,19 +2,21 @@ part of 'likes_cubit.dart';
 
 abstract class LikesState {}
 
-class NoLikedProducts extends LikesState {
-  NoLikedProducts({required this.message});
-  final String message;
-}
+class LikesInitial extends LikesState {}
 
 class LikesLoading extends LikesState {}
 
 class LikesLoaded extends LikesState {
-  LikesLoaded({required this.products});
-  final List<Product> products;
+  final List<Product> likedProducts;
+  LikesLoaded({required this.likedProducts});
+}
+
+class NoLikedProducts extends LikesState {
+  final String message;
+  NoLikedProducts({required this.message});
 }
 
 class LikesError extends LikesState {
-  LikesError({required this.message});
   final String message;
+  LikesError({required this.message});
 }

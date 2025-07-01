@@ -1,35 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:shopify/features/Info/model/user_model.dart';
 import 'package:shopify/features/Info/view/info.dart';
 import 'package:shopify/features/Likes/view/likes.dart';
 import 'package:shopify/features/cart/view/cart.dart';
+import 'package:shopify/features/home/cubit/home_cubit.dart';
 import 'package:shopify/features/home/view/home_screen.dart';
 
 class Root extends StatefulWidget {
-  const Root({
-    super.key,
-    required this.name,
-    required this.location,
-    required this.bio,
-    required this.birthDate,
-    required this.userName,
-    required this.profileImage,
-    required this.followedBrands,
-    required this.following,
-    required this.userCredential,
-  });
+  const Root({super.key, this.userData, this.userCredential});
 
-  final String name;
-  final String location;
-  final String bio;
-  final String birthDate;
-  final String userName;
-  final String profileImage;
-  final List<String> followedBrands;
-  final int following;
-  final UserCredential userCredential;
+  final UserModel? userData;
+  final UserCredential? userCredential;
 
   @override
   State<Root> createState() => _RootState();
@@ -41,6 +26,8 @@ class _RootState extends State<Root> {
 
   @override
   void initState() {
+    context.read<HomeCubit>().loadLikes();
+    context.read<HomeCubit>().loadCart();
     super.initState();
   }
 
@@ -61,10 +48,10 @@ class _RootState extends State<Root> {
         controller: _pageController,
         physics: NeverScrollableScrollPhysics(),
         children: [
-          Home(userData: widget.userData ?? {}),
+          Home(),
           Likes(),
-          Cart(userData: widget.userData ?? {}),
-          ProfileInfo(userData: widget.userData ?? {}),
+          Cart(),
+          // ProfileInfo(),
         ],
       ),
       bottomNavigationBar: GNav(
@@ -89,11 +76,11 @@ class _RootState extends State<Root> {
             icon: Iconsax.shopping_cart_copy,
             text: "Cart",
           ),
-          GButton(
-            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-            icon: Iconsax.user_copy,
-            text: "Profile",
-          ),
+          // GButton(
+          //   padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          //   icon: Iconsax.user_copy,
+          //   text: "Profile",
+          // ),
         ],
         onTabChange: (index) {
           setState(() {

@@ -1,6 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shopify/features/Likes/cubit/likes_cubit.dart';
+import 'package:shopify/features/cart/cubits/cart_cubit.dart';
 import 'package:shopify/features/home/model/product_model.dart';
 import 'package:shopify/features/home/service/home_service.dart';
 import 'package:shopify/features/home/view/widgets/product_card.dart';
@@ -56,11 +59,49 @@ class _CategoryProductsState extends State<CategoryProducts> {
                         context,
                         MaterialPageRoute(
                           builder:
-                              (context) => ProductDetails(product: product),
+                              (context) => ProductDetails(
+                                product: product,
+                                onAddToLikes: (product) {
+                                  context.read<LikesCubit>().addProductToLikes(
+                                    product,
+                                    products,
+                                  );
+                                },
+                                onRemoveFromLikes: (product) {
+                                  context.read<LikesCubit>().removeFromLiked(
+                                    product,
+                                    products,
+                                  );
+                                },
+                                isLiked: product.isLiked,
+                              ),
                         ),
                       );
                     },
-                    child: ProductCard(product: product),
+                    child: ProductCard(
+                      product: product,
+                      onAddToCart: (product) {
+                        context.read<CartCubit>().addProduct(product, products);
+                      },
+                      onRemoveFromCart: (product) {
+                        context.read<CartCubit>().removeProduct(
+                          product,
+                          products,
+                        );
+                      },
+                      onAddToLikes: (product) {
+                        context.read<LikesCubit>().addProductToLikes(
+                          product,
+                          products,
+                        );
+                      },
+                      onRemoveFromLikes: (product) {
+                        context.read<LikesCubit>().removeFromLiked(
+                          product,
+                          products,
+                        );
+                      },
+                    ),
                   );
                 },
               );

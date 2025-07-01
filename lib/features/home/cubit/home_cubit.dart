@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:shopify/features/Likes/cubit/likes_cubit.dart';
 import 'package:shopify/features/cart/cubits/cart_cubit.dart';
 import 'package:shopify/features/home/model/product_model.dart';
@@ -13,16 +16,32 @@ class HomeCubit extends Cubit<HomeState> {
     : super(HomeLoading());
 
   bool isAsc = true;
+  final box = Hive.box<Product>('productsBox');
+
+  List<Product> allProducts = [];
+
+  Future<void> init() async {
+    emit(HomeLoading());
+    allProducts = await fetchAllProducts();
+    emit(HomeLoaded(products: box.toMap()));
+  }
+
+  void loadLikes() {
+    likesCubit.getLikedProducts(allProducts);
+  }
+
+  void loadCart() {
+    log("ya alby ${cartCubit.cartBox.length.toString()}");
+    cartCubit.getCartProducts(allProducts);
+  }
 
   Future<List<Product>> fetchAllProducts() async {
     emit(HomeLoading());
     try {
       final products = await HomeService().getAllProducts();
-      for (var product in products) {
-        product.isLiked = likesCubit.likedProductIds.contains(product.id);
-        product.isAddedToCart = cartCubit.cartProductIds.contains(product.id);
-      }
-      emit(HomeLoaded(products: products));
+      await saveProducts(products);
+      allProducts = box.values.toList();
+      emit(HomeLoaded(products: box.toMap()));
       return products;
     } catch (e) {
       emit(HomeError(message: e.toString()));
@@ -34,15 +53,19 @@ class HomeCubit extends Cubit<HomeState> {
     emit(HomeLoading());
     try {
       final products = await HomeService().sortProductsByPrice(sortBy, order);
-      for (var product in products) {
-        product.isLiked = likesCubit.likedProductIds.contains(product.id);
-        product.isAddedToCart = cartCubit.cartProductIds.contains(product.id);
-      }
-      emit(HomeLoaded(products: products));
+      await saveProducts(products);
+      emit(HomeLoaded(products: box.toMap()));
       return products;
     } catch (e) {
       emit(HomeError(message: e.toString()));
       return [];
     }
+  }
+
+  Future<void> saveProducts(List<Product> products) async {
+    for (var product in products) {
+      await box.put(product.id, product);
+    }
+    allProducts = box.values.toList();
   }
 }

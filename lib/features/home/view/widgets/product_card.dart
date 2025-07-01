@@ -8,8 +8,19 @@ import 'package:shopify/features/home/model/product_model.dart';
 import 'package:shopify/features/home/view/widgets/product_details.dart';
 
 class ProductCard extends StatefulWidget {
-  const ProductCard({super.key, required this.product});
+  const ProductCard({
+    super.key,
+    required this.product,
+    required this.onAddToCart,
+    required this.onRemoveFromCart,
+    required this.onAddToLikes,
+    required this.onRemoveFromLikes,
+  });
   final Product product;
+  final void Function(Product product) onAddToCart;
+  final void Function(Product product) onRemoveFromCart;
+  final void Function(Product product) onAddToLikes;
+  final void Function(Product product) onRemoveFromLikes;
 
   @override
   State<ProductCard> createState() => _ProductCardState();
@@ -24,7 +35,12 @@ class _ProductCardState extends State<ProductCard> {
             context,
             MaterialPageRoute(
               builder: (context) {
-                return ProductDetails(product: widget.product);
+                return ProductDetails(
+                  isLiked: widget.product.isLiked,
+                  product: widget.product,
+                  onAddToLikes: widget.onAddToCart,
+                  onRemoveFromLikes: widget.onRemoveFromCart,
+                );
               },
             ),
           ),
@@ -84,12 +100,8 @@ class _ProductCardState extends State<ProductCard> {
                         widget.product.isLiked = !widget.product.isLiked;
                       });
                       widget.product.isLiked
-                          ? context.read<LikesCubit>().addToLiked(
-                            widget.product,
-                          )
-                          : context.read<LikesCubit>().removeFromLiked(
-                            widget.product,
-                          );
+                          ? widget.onAddToLikes(widget.product)
+                          : widget.onRemoveFromLikes(widget.product);
                     },
                     child: Container(
                       height: 50,
@@ -99,11 +111,15 @@ class _ProductCardState extends State<ProductCard> {
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
-                        widget.product.isLiked
+                        context.read<LikesCubit>().isProductLiked(
+                              widget.product.id,
+                            )
                             ? Ionicons.heart
                             : Ionicons.heart_outline,
                         color:
-                            widget.product.isLiked
+                            context.read<LikesCubit>().isProductLiked(
+                                  widget.product.id,
+                                )
                                 ? Colors.red
                                 : Colors.black38,
                         size: 32,
@@ -163,8 +179,11 @@ class _ProductCardState extends State<ProductCard> {
                     widget.product.isAddedToCart =
                         !widget.product.isAddedToCart;
                   });
-                  if (widget.product.isAddedToCart) {
-                    context.read<CartCubit>().addProduct(widget.product);
+
+                  if (!context.read<CartCubit>().isProductInCart(
+                    widget.product.id,
+                  )) {
+                    widget.onAddToCart(widget.product);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         behavior: SnackBarBehavior.floating,
@@ -174,7 +193,7 @@ class _ProductCardState extends State<ProductCard> {
                       ),
                     );
                   } else {
-                    context.read<CartCubit>().removeProduct(widget.product);
+                    widget.onRemoveFromCart(widget.product);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         behavior: SnackBarBehavior.floating,
@@ -186,7 +205,9 @@ class _ProductCardState extends State<ProductCard> {
                   }
                 },
                 child:
-                    !widget.product.isAddedToCart
+                    !context.read<CartCubit>().isProductInCart(
+                          widget.product.id,
+                        )
                         ? Container(
                           width: double.infinity,
                           height: 40,

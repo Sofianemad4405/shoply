@@ -1,7 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shopify/core/constants.dart';
 import 'package:shopify/features/Likes/cubit/likes_cubit.dart';
+import 'package:shopify/features/home/cubit/home_cubit.dart';
 
 class Likes extends StatefulWidget {
   const Likes({super.key});
@@ -11,6 +13,15 @@ class Likes extends StatefulWidget {
 }
 
 class _LikesState extends State<Likes> {
+  @override
+  void initState() {
+    context.read<LikesCubit>().getLikedProducts(
+      context.read<HomeCubit>().allProducts,
+    );
+    log("ya alby ${context.read<LikesCubit>().likedBox.length}");
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,19 +61,23 @@ class _LikesState extends State<Likes> {
             );
           }
           if (state is LikesLoaded) {
+            final likedProducts = state.likedProducts;
             return ListView.separated(
               itemBuilder: (context, index) {
-                final product = state.products[index];
+                // final product = products[index];
                 return ListTile(
-                  leading: Image.network(product.images?[0] ?? ""),
-                  title: Text(product.title ?? ""),
+                  leading: Image.network(likedProducts[index].images?[0] ?? ""),
+                  title: Text(likedProducts[index].title ?? ""),
                   subtitle: Text(
-                    "${product.price}",
+                    "${likedProducts[index].price}",
                     style: TextStyle(color: Colors.grey),
                   ),
                   trailing: GestureDetector(
                     onTap: () {
-                      context.read<LikesCubit>().removeFromLiked(product);
+                      context.read<LikesCubit>().removeFromLiked(
+                        likedProducts[index],
+                        likedProducts,
+                      );
                     },
                     child: Icon(Icons.favorite, color: Colors.red),
                   ),
@@ -71,7 +86,7 @@ class _LikesState extends State<Likes> {
               separatorBuilder: (context, index) {
                 return const Divider(thickness: 0.2);
               },
-              itemCount: state.products.length,
+              itemCount: likedProducts.length,
             );
           } else {
             return Text("Error");
