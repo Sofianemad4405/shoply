@@ -15,6 +15,10 @@ Shoply is designed to be a simple but complete shopping app that demonstrates go
 - **RESTful API Integration**  
   Fetch product data from a remote backend using clean, asynchronous API calls.
 
+- **Product Categories**  
+  - Products are organized into categories for easy browsing.
+  - Users can filter products by category.
+
 - **Search & Sort**  
   - Search products by keyword.
   - Sort products based on criteria like price, popularity, or relevance.
