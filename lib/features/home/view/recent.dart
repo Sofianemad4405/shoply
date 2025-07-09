@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 class Recent extends StatelessWidget {
   const Recent({
@@ -23,7 +25,7 @@ class Recent extends StatelessWidget {
           "Recent Products",
           style: TextStyle(
             color: Colors.black,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w600,
             fontSize: 20,
           ),
         ),
@@ -51,13 +53,13 @@ class Recent extends StatelessWidget {
                       .toList(),
           child: Row(
             children: [
-              Icon(Icons.filter_list, color: Colors.grey),
+              Icon(FontAwesomeIcons.sort, color: Colors.grey, size: 16),
               SizedBox(width: 8),
               Text(
                 "Sort By",
                 style: TextStyle(
                   color: Colors.grey,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
                   fontSize: 16,
                 ),
               ),

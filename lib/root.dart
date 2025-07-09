@@ -1,9 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
-import 'package:shopify/features/Info/model/user_model.dart';
+import 'package:shopify/core/constants.dart';
+import 'package:shopify/core/prefs.dart';
 import 'package:shopify/features/Info/view/info.dart';
 import 'package:shopify/features/Likes/view/likes.dart';
 import 'package:shopify/features/cart/view/cart.dart';
@@ -11,10 +11,7 @@ import 'package:shopify/features/home/cubit/home_cubit.dart';
 import 'package:shopify/features/home/view/home_screen.dart';
 
 class Root extends StatefulWidget {
-  const Root({super.key, this.userData, this.userCredential});
-
-  final UserModel? userData;
-  final UserCredential? userCredential;
+  const Root({super.key});
 
   @override
   State<Root> createState() => _RootState();
@@ -26,6 +23,7 @@ class _RootState extends State<Root> {
 
   @override
   void initState() {
+    Prefs.init();
     context.read<HomeCubit>().loadLikes();
     context.read<HomeCubit>().loadCart();
     super.initState();
@@ -48,9 +46,9 @@ class _RootState extends State<Root> {
         controller: _pageController,
         physics: NeverScrollableScrollPhysics(),
         children: [
-          Home(),
-          Likes(),
-          Cart(),
+          // Home(),
+          // Likes(),
+          // Cart(),
           // ProfileInfo(),
         ],
       ),

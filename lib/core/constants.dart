@@ -71,5 +71,11 @@ class Constants {
   static String holderImage =
       "https://as2.ftcdn.net/v2/jpg/05/27/29/95/1000_F_527299569_vYLOucMAr1oz52CRaQbZNC3tIjtiEwaY.jpg";
   static List<Product> cartProducts = [];
-  // static String kisLoggedIn = "isLoggedIn";
+  static String kisLoggedIn = "isLoggedIn";
+  static String kUser = "user";
+  static String kSignUp = "signup";
+  static String kSignIn = "signin";
+  static String kRoot = "root";
+
+  static String kAlreadyHaveAnAccount = "already have an account?";
 }

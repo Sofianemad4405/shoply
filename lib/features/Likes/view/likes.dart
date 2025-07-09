@@ -69,7 +69,7 @@ class _LikesState extends State<Likes> {
                   leading: Image.network(likedProducts[index].images?[0] ?? ""),
                   title: Text(likedProducts[index].title ?? ""),
                   subtitle: Text(
-                    "${likedProducts[index].price}",
+                    "\$ ${likedProducts[index].price}",
                     style: TextStyle(color: Colors.grey),
                   ),
                   trailing: GestureDetector(
