@@ -3,12 +3,13 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:shopify/core/models/product_entity.dart';
 import 'package:shopify/core/utils/constants.dart';
 import 'package:shopify/core/utils/extention.dart';
 import 'package:shopify/core/utils/text_styles.dart';
 import 'package:shopify/core/widgets/custom_app_bar.dart';
+import 'package:shopify/core/widgets/grid_or_list.dart';
 import 'package:shopify/features/category/presentation/cubit/caterories_products_cubit/category_products_cubit.dart';
-import 'package:shopify/features/category/presentation/widgets/categories_page_view.dart';
 import 'package:shopify/features/category/presentation/widgets/pop_up_menu.dart';
 import 'package:shopify/core/models/product_model.dart';
 import 'package:shopify/core/widgets/product_card.dart';
@@ -223,7 +224,7 @@ class _CategoryProductsState extends State<CategoryProducts> {
 
 class ProductListTile extends StatelessWidget {
   const ProductListTile({super.key, required this.product});
-  final Product product;
+  final ProductEntity product;
 
   @override
   Widget build(BuildContext context) {

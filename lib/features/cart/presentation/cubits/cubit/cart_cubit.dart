@@ -17,15 +17,17 @@ class CartCubit extends Cubit<CartState> {
 
   final CartRepoImpl cartService;
   List<ProductEntity> cartProducts = [];
-  Set<int> loadingProductIds = {};
-
   Set<int> cartProductIds = {};
 
   Future<void> init() async {
     emit(CartLoadingState());
     try {
       await getCartProducts();
-      emit(CartLoadedState(cartProducts: cartProducts));
+      emit(
+        cartProducts.isEmpty
+            ? CartNoProductsState()
+            : CartLoadedState(cartProducts: cartProducts),
+      );
       log("Cart Products Loaded");
     } catch (e) {
       emit(CartErrorState(error: e.toString()));
@@ -45,43 +47,62 @@ class CartCubit extends Cubit<CartState> {
   }
 
   Future<void> deleteProductFromCart(ProductEntity product) async {
-    emit(CartLoadingState());
-    loadingProductIds.add(product.id);
-    await RemoveProductFromCart(cartService).call(product);
+    final index = cartProducts.indexWhere((p) => p.id == product.id);
+    if (index != -1) {
+      cartProducts.removeAt(index);
+      emit(CartLoadedState(cartProducts: cartProducts));
+    }
+    RemoveProductFromCart(cartService).call(product);
     await getCartProducts();
-    loadingProductIds.remove(product.id);
-    emit(CartLoadedState(cartProducts: cartProducts));
+    emit(
+      cartProducts.isEmpty
+          ? CartNoProductsState()
+          : CartLoadedState(cartProducts: cartProducts),
+    );
   }
 
   Future<void> addProductToCart(ProductEntity product) async {
-    emit(CartLoadingState());
-    loadingProductIds.add(product.id);
-    await AddProductToCart(cartService).call(product);
+    AddProductToCart(cartService).call(product);
     await getCartProducts();
-    loadingProductIds.remove(product.id);
     emit(CartLoadedState(cartProducts: cartProducts));
   }
 
   Future<void> increaseQuantity(ProductEntity product) async {
-    // emit(CartLoadingState());
-    if (product.quantity <= product.stock) {
+    final index = cartProducts.indexWhere((p) => p.id == product.id);
+    if (index != -1 &&
+        cartProducts[index].quantity < cartProducts[index].stock) {
+      cartProducts[index] = cartProducts[index].copyWith(
+        quantity: cartProducts[index].quantity + 1,
+      );
+
+      emit(CartLoadedState(cartProducts: cartProducts));
+
       await IncreaseProductQuantity(cartService).call(product);
+
+      await getCartProducts();
+      emit(CartLoadedState(cartProducts: cartProducts));
     }
-    await getCartProducts();
-    emit(CartLoadedState(cartProducts: cartProducts));
   }
 
   Future<void> decreaseProductQuantity(ProductEntity product) async {
-    emit(CartLoadingState());
-    if (product.quantity > 1) {
+    final index = cartProducts.indexWhere((p) => p.id == product.id);
+    if (index != -1 && cartProducts[index].quantity > 1) {
+      cartProducts[index] = cartProducts[index].copyWith(
+        quantity: cartProducts[index].quantity - 1,
+      );
+
+      emit(CartLoadedState(cartProducts: List.from(cartProducts)));
+
       await DecreaseProductQuantity(cartService).call(product);
+
+      await getCartProducts();
+      emit(CartLoadedState(cartProducts: cartProducts));
     }
-    await getCartProducts();
-    emit(CartLoadedState(cartProducts: cartProducts));
+    // await getCartProducts();
+    // emit(CartLoadedState(cartProducts: cartProducts));
   }
 
   Future<void> clearCart() async {
-    emit(CartLoadingState());
     await ClearCartProducts(cartService).call();
     await getCartProducts();
     emit(CartLoadedState(cartProducts: []));

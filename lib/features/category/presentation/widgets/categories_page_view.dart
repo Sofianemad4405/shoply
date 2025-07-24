@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:shopify/core/utils/constants.dart';
 import 'package:shopify/core/utils/extention.dart';
 import 'package:shopify/core/utils/text_styles.dart';
 import 'package:shopify/core/widgets/custom_app_bar.dart';
+import 'package:shopify/core/widgets/grid_or_list.dart';
 import 'package:shopify/features/category/presentation/cubit/home_categories_cubit/home_categories_cubit.dart';
 import 'package:shopify/features/category/presentation/widgets/category_list_tile.dart';
 import 'package:shopify/features/category/presentation/widgets/category_icon.dart';
@@ -162,29 +162,6 @@ class CategoriesGridView extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-class GridOrList extends StatelessWidget {
-  const GridOrList({super.key, required this.isGridView, required this.image});
-
-  final bool isGridView;
-  final String image;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 34,
-      width: 34,
-      decoration: BoxDecoration(
-        color: !isGridView ? Colors.white : Color(0xffE9EAEC),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: SizedBox(
-        height: 24,
-        width: 24,
-        child: Center(child: SvgPicture.asset(image)),
-      ),
     );
   }
 }

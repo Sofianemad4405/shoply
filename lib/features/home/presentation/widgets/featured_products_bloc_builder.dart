@@ -17,7 +17,11 @@ class FeaturedProductsBlocBuilder extends StatelessWidget {
           return Center(child: Text(state.message));
         }
         if (state is HomeLoaded) {
-          return FeaturedProductsList(products: state.products);
+          return FeaturedProductsList(
+            products: state.products,
+            count: 8,
+            inHome: true,
+          );
         }
         return const Center(child: CircularProgressIndicator());
       },

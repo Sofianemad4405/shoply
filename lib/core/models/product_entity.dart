@@ -37,4 +37,42 @@ class ProductEntity {
     this.warrantyInformation,
     this.shippingInformation,
   });
+
+  ProductEntity copyWith({
+    int? id,
+    String? name,
+    String? image,
+    double? price,
+    int? quantity,
+    int? stock,
+    String? details,
+    List<String>? tags,
+    String? availabilityStatus,
+    List<String>? images,
+    double? discountPercentage,
+    num? rating,
+    // List<Map<String, dynamic>> reviews,
+    Map<String, double>? dimensions,
+    String? warrantyInformation,
+    String? shippingInformation,
+  }) {
+    return ProductEntity(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      image: image ?? this.image,
+      price: price ?? this.price,
+      quantity: quantity ?? this.quantity,
+      stock: stock ?? this.stock,
+      details: details ?? this.details,
+      tags: tags ?? this.tags,
+      availabilityStatus: availabilityStatus ?? this.availabilityStatus,
+      images: images ?? this.images,
+      discountPercentage: discountPercentage ?? this.discountPercentage,
+      rating: rating ?? this.rating,
+      reviews: reviews,
+      dimensions: dimensions ?? this.dimensions,
+      warrantyInformation: warrantyInformation ?? this.warrantyInformation,
+      shippingInformation: shippingInformation ?? this.shippingInformation,
+    );
+  }
 }

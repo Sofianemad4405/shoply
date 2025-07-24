@@ -5,6 +5,7 @@ import 'package:shopify/features/cart/presentation/view/widgets/cart_view_body.d
 
 class Cart extends StatefulWidget {
   const Cart({super.key});
+  // static String routeName = Constants.kCart;
 
   @override
   State<Cart> createState() => _CartState();
@@ -19,18 +20,6 @@ class _CartState extends State<Cart> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CartCubit, CartState>(
-      builder: (context, state) {
-        return state is CartLoadingState
-            ? const Center(child: CircularProgressIndicator())
-            : state is CartLoadedState
-            ? const CartViewBody()
-            : state is CartErrorState
-            ? Center(child: Text(state.error))
-            : state is CartNoProductsState
-            ? const Center(child: Text("No Products In Cart"))
-            : const CartViewBody();
-      },
-    );
+    return CartViewBody();
   }
 }

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:shopify/core/models/product_entity.dart';
 import 'package:shopify/core/utils/constants.dart';
 import 'package:shopify/features/auth/presentation/view/sign_in_page_view.dart';
 import 'package:shopify/features/auth/presentation/view/sign_up_page_view.dart';
 import 'package:shopify/features/category/presentation/widgets/categories_page_view.dart';
 import 'package:shopify/features/category/presentation/widgets/category_products.dart';
+import 'package:shopify/features/home/presentation/widgets/featured_products.dart';
 import 'package:shopify/features/on_boarding/widgets/on_boarding_screen.dart';
 import 'package:shopify/features/home/presentation/widgets/product_details.dart';
-import 'package:shopify/core/models/product_model.dart';
 import 'package:shopify/root.dart';
 
 class AppRouter {
@@ -31,10 +32,18 @@ class AppRouter {
       case Constants.kProductDetails:
         return MaterialPageRoute(
           builder:
-              (_) => ProductDetails(product: settings.arguments as Product),
+              (_) =>
+                  ProductDetails(product: settings.arguments as ProductEntity),
         );
       case Constants.kOnBoarding:
         return MaterialPageRoute(builder: (_) => OnBoardingScreen());
+      case Constants.kFeaturedProducts:
+        return MaterialPageRoute(
+          builder:
+              (_) => FeaturedProducts(
+                products: settings.arguments as List<ProductEntity>,
+              ),
+        );
       default:
         return MaterialPageRoute(
           builder:

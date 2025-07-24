@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:shopify/core/models/product_entity.dart';
 import 'package:shopify/core/utils/constants.dart';
 import 'package:shopify/core/utils/text_styles.dart';
 import 'package:shopify/core/models/product_model.dart';
@@ -16,7 +17,7 @@ class ProductDetails extends StatefulWidget {
     this.onRemoveFromLikes,
     this.isLiked,
   });
-  final Product product;
+  final ProductEntity product;
   final void Function(Product product)? onAddToLikes;
   final void Function(Product product)? onRemoveFromLikes;
   final bool? isLiked;
@@ -111,7 +112,7 @@ class _ProductDetailsState extends State<ProductDetails> {
               Gap(10),
               ProductMetaData(product: widget.product),
               Gap(10),
-              Center(child: AddToCartButton(onTap: () {})),
+              Center(child: AddToCartButton(product: widget.product)),
               Gap(10),
             ],
           ),
@@ -124,7 +125,7 @@ class _ProductDetailsState extends State<ProductDetails> {
 class ProductMetaData extends StatefulWidget {
   const ProductMetaData({super.key, required this.product});
 
-  final Product product;
+  final ProductEntity product;
 
   @override
   State<ProductMetaData> createState() => _ProductMetaDataState();

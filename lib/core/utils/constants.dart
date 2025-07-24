@@ -54,6 +54,8 @@ class Constants {
   static const String kCategories = "categories";
   static const String kCategoryProducts = "categoryProducts";
   static const String kProductDetails = "productDetails";
+  static const String kFeaturedProducts = "Featured Products";
+  // static const String kCart = "Cart";
 
   static String kAlreadyHaveAnAccount = "already have an account?";
   static String kIsLoggedIn = "is logged in";

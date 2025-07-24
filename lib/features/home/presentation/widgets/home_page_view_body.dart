@@ -11,8 +11,10 @@ import 'package:shopify/core/widgets/custom_app_bar.dart';
 import 'package:shopify/features/category/presentation/cubit/caterories_products_cubit/category_products_cubit.dart';
 import 'package:shopify/features/category/presentation/cubit/home_categories_cubit/home_categories_cubit.dart';
 import 'package:shopify/features/category/presentation/widgets/categories_page_view.dart';
+import 'package:shopify/features/home/presentation/cubit/home_cubit.dart';
 import 'package:shopify/features/home/presentation/widgets/banners.dart';
 import 'package:shopify/features/category/presentation/widgets/category_icon.dart';
+import 'package:shopify/features/home/presentation/widgets/featured_products.dart';
 import 'package:shopify/features/home/presentation/widgets/featured_products_bloc_builder.dart';
 
 class HomePageViewBody extends StatelessWidget {
@@ -55,7 +57,34 @@ class HomePageViewBody extends StatelessWidget {
                       },
                     ),
                     Gap(10),
-                    FeaturedProductsRow(),
+                    BlocBuilder<HomeCubit, HomeState>(
+                      builder: (context, state) {
+                        return Row(
+                          children: [
+                            Text(
+                              "Featured Products",
+                              style: TextStyles.blackBold.copyWith(
+                                fontSize: 20,
+                              ),
+                            ),
+                            Spacer(),
+                            GestureDetector(
+                              onTap: () {
+                                context.push(
+                                  FeaturedProducts.routeName,
+                                  arguments:
+                                      state is HomeLoaded ? state.products : [],
+                                );
+                              },
+                              child: SvgPicture.asset(
+                                "assets/imgs/svgs/see_all.svg",
+                                height: 24,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                     Gap(10),
                     FeaturedProductsBlocBuilder(),
                   ],
@@ -148,20 +177,11 @@ class _CategoriesGridViewState extends State<CategoriesGridView> {
   }
 }
 
-class FeaturedProductsRow extends StatelessWidget {
-  const FeaturedProductsRow({super.key});
+// class FeaturedProductsRow extends StatelessWidget {
+//   const FeaturedProductsRow({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          "Featured Products",
-          style: TextStyles.blackBold.copyWith(fontSize: 20),
-        ),
-        Spacer(),
-        SvgPicture.asset("assets/imgs/svgs/see_all.svg", height: 24),
-      ],
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return ;
+//   }
+// }

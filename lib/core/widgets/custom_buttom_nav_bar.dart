@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shopify/features/cart/presentation/cubits/cubit/cart_cubit.dart';
 
 class CustomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -18,56 +20,92 @@ class CustomNavBar extends StatelessWidget {
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
       ),
-      child: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        currentIndex: currentIndex,
-        onTap: onTabChange,
-        type: BottomNavigationBarType.fixed,
-        enableFeedback: false,
-        selectedItemColor: Color(0xff22C55E),
-        unselectedItemColor: Color(0xff6B7280),
-        items: [
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              "assets/imgs/svgs/home.svg",
-              colorFilter: ColorFilter.mode(
-                currentIndex == 0 ? Color(0xff22C55E) : Color(0xff6B7280),
-                BlendMode.srcIn,
+      child: BlocBuilder<CartCubit, CartState>(
+        builder: (context, state) {
+          final cartItemsCount = context.read<CartCubit>().cartProducts.length;
+          return BottomNavigationBar(
+            backgroundColor: Colors.white,
+            currentIndex: currentIndex,
+            onTap: onTabChange,
+            type: BottomNavigationBarType.fixed,
+            enableFeedback: false,
+            selectedItemColor: Color(0xff22C55E),
+            unselectedItemColor: Color(0xff6B7280),
+            items: [
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                  "assets/imgs/svgs/home.svg",
+                  colorFilter: ColorFilter.mode(
+                    currentIndex == 0 ? Color(0xff22C55E) : Color(0xff6B7280),
+                    BlendMode.srcIn,
+                  ),
+                ),
+                label: 'Home',
               ),
-            ),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              "assets/imgs/svgs/search.svg",
-              colorFilter: ColorFilter.mode(
-                currentIndex == 1 ? Color(0xff22C55E) : Color(0xff6B7280),
-                BlendMode.srcIn,
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                  "assets/imgs/svgs/search.svg",
+                  colorFilter: ColorFilter.mode(
+                    currentIndex == 1 ? Color(0xff22C55E) : Color(0xff6B7280),
+                    BlendMode.srcIn,
+                  ),
+                ),
+                label: 'Search',
               ),
-            ),
-            label: 'Search',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              "assets/imgs/svgs/cart.svg",
-              colorFilter: ColorFilter.mode(
-                currentIndex == 2 ? Color(0xff22C55E) : Color(0xff6B7280),
-                BlendMode.srcIn,
+              BottomNavigationBarItem(
+                icon: Stack(
+                  clipBehavior:
+                      Clip.none, // 👈 مهم علشان يسمح للدائرة بالخروج من حدود الأيقونة
+                  children: [
+                    SvgPicture.asset(
+                      "assets/imgs/svgs/cart.svg",
+                      colorFilter: ColorFilter.mode(
+                        currentIndex == 2
+                            ? const Color(0xff22C55E)
+                            : const Color(0xff6B7280),
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                    cartItemsCount != 0
+                        ? Positioned(
+                          right: -6,
+                          top: -4,
+                          child: Container(
+                            height: 18,
+                            width: 18,
+                            decoration: const BoxDecoration(
+                              color: Color.fromARGB(255, 244, 16, 0),
+                              shape: BoxShape.circle,
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              cartItemsCount.toString(),
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        )
+                        : SizedBox.shrink(),
+                  ],
+                ),
+                label: 'Cart',
               ),
-            ),
-            label: 'Cart',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              "assets/imgs/svgs/profile.svg",
-              colorFilter: ColorFilter.mode(
-                currentIndex == 3 ? Color(0xff22C55E) : Color(0xff6B7280),
-                BlendMode.srcIn,
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                  "assets/imgs/svgs/profile.svg",
+                  colorFilter: ColorFilter.mode(
+                    currentIndex == 3 ? Color(0xff22C55E) : Color(0xff6B7280),
+                    BlendMode.srcIn,
+                  ),
+                ),
+                label: 'Profile',
               ),
-            ),
-            label: 'Profile',
-          ),
-        ],
+            ],
+          );
+        },
       ),
     );
   }
