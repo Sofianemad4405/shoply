@@ -1,33 +1,76 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 
-class CustomTextField extends StatelessWidget {
+class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
   final String hintText;
-  final bool obscureText;
   final String? Function(String?)? validator;
-  final IconData? prefixIcon;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
   final AutovalidateMode? autovalidateMode;
-
+  final bool isPassword;
+  final Function(String?)? onFieldSubmitted;
+  final Function(String?)? onChanged;
   const CustomTextField({
     super.key,
     required this.controller,
     required this.hintText,
-    this.obscureText = false,
     this.validator,
     required this.prefixIcon,
+    this.suffixIcon,
     this.autovalidateMode,
+    this.isPassword = false,
+    this.onFieldSubmitted,
+    this.onChanged,
   });
+
+  @override
+  State<CustomTextField> createState() => _CustomTextFieldState();
+}
+
+class _CustomTextFieldState extends State<CustomTextField> {
+  bool obscure = false;
+  bool showEyeIcon = false;
+  @override
+  void initState() {
+    obscure = widget.isPassword;
+    super.initState();
+    widget.controller.addListener(() {
+      final hasText = widget.controller.text.isNotEmpty;
+      if (hasText != showEyeIcon) {
+        setState(() {
+          showEyeIcon = hasText;
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: controller,
-      obscureText: obscureText,
-      validator: validator,
-      autovalidateMode: autovalidateMode,
+      controller: widget.controller,
+      onFieldSubmitted: widget.onFieldSubmitted,
+      obscureText: obscure,
+      validator: widget.validator,
+      onChanged: widget.onChanged,
+      autovalidateMode: widget.autovalidateMode,
       decoration: InputDecoration(
-        hintText: hintText,
-        prefixIcon: Icon(prefixIcon, color: Colors.grey),
+        suffixIcon:
+            !widget.isPassword || widget.controller.text.isEmpty
+                ? widget.suffixIcon
+                : GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      obscure = !obscure;
+                    });
+                  },
+                  child: Icon(
+                    !obscure ? Iconsax.eye_slash : Iconsax.eye,
+                    color: Colors.grey,
+                  ),
+                ),
+        hintText: widget.hintText,
+        prefixIcon: widget.prefixIcon,
 
         hintStyle: TextStyle(color: Color(0xffCCCCCC)),
         // البوردر العادي

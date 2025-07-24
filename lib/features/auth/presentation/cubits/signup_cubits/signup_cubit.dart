@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:shopify/core/errors/fire_base_auth_failure.dart';
-import 'package:shopify/core/fire_base_auth_service.dart';
 import 'package:shopify/features/auth/domain/repos/auth_repo.dart';
 import 'package:shopify/features/auth/domain/models/user_entity.dart';
 

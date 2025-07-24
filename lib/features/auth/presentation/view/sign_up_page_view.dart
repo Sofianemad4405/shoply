@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shopify/core/constants.dart';
+import 'package:shopify/core/utils/constants.dart';
 import 'package:shopify/core/services/getit_service.dart' as GetItService;
 import 'package:shopify/features/auth/domain/repos/auth_repo.dart';
 import 'package:shopify/features/auth/presentation/cubits/signup_cubits/signup_cubit.dart';

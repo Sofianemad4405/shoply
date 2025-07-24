@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shopify/core/constants.dart';
+import 'package:shopify/core/utils/constants.dart';
 import 'package:shopify/features/auth/presentation/view/sign_in_page_view.dart';
 
 class AlreadyHaveAnAccount extends StatelessWidget {

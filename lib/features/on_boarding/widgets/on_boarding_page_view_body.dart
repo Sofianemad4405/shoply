@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:shopify/core/extention.dart';
+import 'package:shopify/core/utils/constants.dart';
+import 'package:shopify/core/utils/extention.dart';
+import 'package:shopify/core/utils/prefs.dart';
+import 'package:shopify/core/widgets/custom_app_bar.dart';
 import 'package:shopify/features/on_boarding/widgets/on_boarding_center.dart';
 import 'package:shopify/features/on_boarding/widgets/on_boarding_end.dart';
-import 'package:shopify/core/app_heading.dart';
 
 class OnBoardingPageViewBody extends StatefulWidget {
   const OnBoardingPageViewBody({super.key});
@@ -20,7 +22,7 @@ class _OnBoardingPageViewBodyState extends State<OnBoardingPageViewBody> {
     return Column(
       children: [
         Gap(10),
-        AppHeading(),
+        CustomAppBar(isCart: true),
         Spacer(),
         Expanded(
           flex: 3,
@@ -33,19 +35,19 @@ class _OnBoardingPageViewBodyState extends State<OnBoardingPageViewBody> {
             },
             children: [
               OnBoardingCenter(
-                image: "assets/imgs/on_boarding_1.svg",
+                image: "assets/imgs/svgs/on_boarding_1.svg",
                 title: "Browse Products",
                 description:
                     "Discover thousands of products with\nour intuitive browsing experience",
               ),
               OnBoardingCenter(
-                image: "assets/imgs/on_boarding_2.svg",
+                image: "assets/imgs/svgs/on_boarding_2.svg",
                 title: "Fast Checkout",
                 description:
                     "Complete your purchase in seconds\nwith our streamlined checkout process",
               ),
               OnBoardingCenter(
-                image: "assets/imgs/on_boarding_3.svg",
+                image: "assets/imgs/svgs/on_boarding_3.svg",
                 title: "Secure Payments",
                 description:
                     "Shop with confidence knowing your\ntransactions are always protected",
@@ -64,7 +66,8 @@ class _OnBoardingPageViewBodyState extends State<OnBoardingPageViewBody> {
               currentPage = controller.page!;
             });
             if (currentPage == 2) {
-              context.pushReplacement("/signin");
+              Prefs.setBool(Constants.kIsOnBoardingSeen, true);
+              context.pushReplacement(Constants.kSignIn);
             }
           },
           position: currentPage,

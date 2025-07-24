@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:shopify/core/helper_functions.dart';
 import 'package:shopify/features/auth/presentation/cubits/signin_cubits/siginin_cubit.dart';
-import 'package:shopify/features/auth/presentation/view/sign_up_page_view.dart';
-import 'package:shopify/features/auth/presentation/view/widgets/custom_button.dart';
-import 'package:shopify/features/auth/presentation/view/widgets/custom_text_field.dart';
-import 'package:shopify/features/auth/presentation/view/widgets/donot_have_an_account.dart';
 import 'package:shopify/features/auth/presentation/view/widgets/sign_in_page_view_body.dart';
 import 'package:shopify/root.dart';
+import 'package:shopify/core/utils/constants.dart';
+import 'package:shopify/core/utils/prefs.dart';
 
 class SignInPageViewBlocConsumer extends StatelessWidget {
   const SignInPageViewBlocConsumer({super.key});
@@ -37,6 +33,7 @@ class SignInPageViewBlocConsumer extends StatelessWidget {
           //     content: Text("User signed in successfully!"),
           //   ),
           // );
+          Prefs.setBool(Constants.kIsLoggedIn, true);
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => Root()),

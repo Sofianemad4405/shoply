@@ -28,7 +28,7 @@ class OnBoardingEnd extends StatelessWidget {
         Spacer(),
         GestureDetector(
           onTap: onTap,
-          child: SvgPicture.asset("assets/imgs/on_boarding_button.svg"),
+          child: SvgPicture.asset("assets/imgs/svgs/on_boarding_button.svg"),
         ),
       ],
     );

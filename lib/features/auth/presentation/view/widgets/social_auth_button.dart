@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
-import 'package:shopify/core/text_styles.dart';
+import 'package:shopify/core/utils/text_styles.dart';
 
 class SocialAuthButton extends StatelessWidget {
   const SocialAuthButton({

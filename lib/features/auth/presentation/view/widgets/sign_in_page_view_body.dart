@@ -3,14 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
-import 'package:shopify/core/app_heading.dart';
-import 'package:shopify/core/extention.dart';
-import 'package:shopify/core/helper_functions.dart';
-import 'package:shopify/core/text_styles.dart';
+import 'package:shopify/core/utils/constants.dart';
+import 'package:shopify/core/utils/extention.dart';
+import 'package:shopify/core/utils/text_styles.dart';
+import 'package:shopify/core/widgets/custom_app_bar.dart';
 import 'package:shopify/features/auth/presentation/cubits/signin_cubits/siginin_cubit.dart';
 import 'package:shopify/features/auth/presentation/view/widgets/custom_button.dart';
 import 'package:shopify/features/auth/presentation/view/widgets/custom_text_field.dart';
-import 'package:shopify/features/auth/presentation/view/widgets/donot_have_an_account.dart';
 import 'package:shopify/features/auth/presentation/view/widgets/or_row.dart';
 import 'package:shopify/features/auth/presentation/view/widgets/social_auth_button.dart';
 
@@ -32,36 +31,46 @@ class _SigninPageViewBodyState extends State<SigninPageViewBody> {
       child: Form(
         key: formKey,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
               Gap(10),
-              AppHeading(),
+              CustomAppBar(isCart: true),
               Gap(100.h),
               Text(
                 "Welcome Back",
-                style: TextStyles.blackBold.copyWith(fontSize: 28),
+                style: TextStyles.blackBold.copyWith(fontSize: 32),
               ),
-              Gap(20.h),
+              Gap(10.h),
               Text(
                 "Sign in to your account",
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.black,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
               Gap(30.h),
               CustomTextField(
                 controller: email,
+                validator: (value) {
+                  return value!.isEmpty ? "Email is required" : null;
+                },
                 hintText: "Email",
-                prefixIcon: Iconsax.sms_copy,
+                prefixIcon: Icon(Iconsax.sms_copy),
               ),
               Gap(20.h),
               CustomTextField(
                 controller: password,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "Password is required";
+                  }
+                  return null;
+                },
                 hintText: "Password",
-                prefixIcon: Iconsax.lock_copy,
+                prefixIcon: Icon(Iconsax.lock_copy),
+                isPassword: true,
               ),
               Gap(20.h),
               OrRow(text: "Or Continue with"),
@@ -81,12 +90,12 @@ class _SigninPageViewBodyState extends State<SigninPageViewBody> {
               Row(
                 children: [
                   SocialAuthButton(
-                    image: "assets/imgs/facebook.svg",
+                    image: "assets/imgs/svgs/facebook.svg",
                     authMethod: "Facebook",
                   ),
                   Spacer(),
                   SocialAuthButton(
-                    image: "assets/imgs/google.svg",
+                    image: "assets/imgs/svgs/google.svg",
                     authMethod: "Google",
                   ),
                 ],
@@ -97,11 +106,11 @@ class _SigninPageViewBodyState extends State<SigninPageViewBody> {
                 children: [
                   Text(
                     "Don't have an account?",
-                    style: TextStyle(color: Color(0xff4B5563), fontSize: 16),
+                    style: TextStyle(color: Color(0xff4B5563), fontSize: 14),
                   ),
                   GestureDetector(
                     onTap: () {
-                      context.push("/signup");
+                      context.push(Constants.kSignUp);
                     },
                     child: Text(
                       "  Sign up",

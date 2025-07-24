@@ -2,14 +2,12 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
-import 'package:shopify/core/app_heading.dart';
-import 'package:shopify/core/extention.dart';
-import 'package:shopify/core/helper_functions.dart';
-import 'package:shopify/core/text_styles.dart';
+import 'package:shopify/core/widgets/app_heading.dart';
+import 'package:shopify/core/utils/extention.dart';
+import 'package:shopify/core/utils/helper_functions.dart';
+import 'package:shopify/core/utils/text_styles.dart';
 import 'package:shopify/features/auth/presentation/cubits/signup_cubits/signup_cubit.dart';
 import 'package:shopify/features/auth/presentation/view/widgets/custom_button.dart';
 import 'package:shopify/features/auth/presentation/view/widgets/custom_text_field.dart';
@@ -54,7 +52,7 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.black,
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                   Gap(30),
@@ -63,7 +61,7 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
                     controller: name,
                     hintText: "Full Name",
                     validator: validateName,
-                    prefixIcon: Iconsax.user_copy,
+                    prefixIcon: Icon(Iconsax.user_copy),
                   ),
                   Gap(20),
                   CustomTextField(
@@ -71,7 +69,7 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
                     controller: location,
                     hintText: "Location",
                     validator: validateLocation,
-                    prefixIcon: Iconsax.location_copy,
+                    prefixIcon: Icon(Iconsax.location_copy),
                   ),
                   Gap(20),
                   CustomTextField(
@@ -79,25 +77,27 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
                     controller: email,
                     hintText: "Email",
                     validator: validateEmail,
-                    prefixIcon: Iconsax.sms_copy,
+                    prefixIcon: Icon(Iconsax.sms_copy),
                   ),
                   Gap(20),
                   CustomTextField(
-                    autovalidateMode: AutovalidateMode.onUnfocus,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     controller: password,
                     hintText: "Password",
                     validator: validatePassword,
-                    prefixIcon: Iconsax.lock_copy,
+                    prefixIcon: Icon(Iconsax.lock_copy),
+                    isPassword: true,
                   ),
                   Gap(20),
                   CustomTextField(
-                    autovalidateMode: AutovalidateMode.onUnfocus,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     controller: confirmPassword,
                     hintText: "Confirm Password",
                     validator:
                         (value) =>
                             passwordConfirmValidator(password.text, value),
-                    prefixIcon: Iconsax.lock_copy,
+                    prefixIcon: Icon(Iconsax.lock_copy),
+                    isPassword: true,
                   ),
                   Gap(20),
                   CustomButton(
@@ -120,12 +120,12 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
                   Row(
                     children: [
                       SocialAuthButton(
-                        image: "assets/imgs/facebook.svg",
+                        image: "assets/imgs/svgs/facebook.svg",
                         authMethod: "Facebook",
                       ),
                       Spacer(),
                       SocialAuthButton(
-                        image: "assets/imgs/google.svg",
+                        image: "assets/imgs/svgs/google.svg",
                         authMethod: "Google",
                       ),
                     ],
