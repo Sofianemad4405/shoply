@@ -1,56 +1,91 @@
-import 'package:shopify/core/services/fire_store_service.dart';
+import 'dart:developer';
+import 'package:shopify/core/models/product_entity.dart';
 import 'package:shopify/core/models/product_model.dart';
-import 'package:shopify/features/wishlist/domain/iwishlist_service_repo.dart';
+import 'package:shopify/core/utils/fire_base_auth_service.dart';
+import 'package:shopify/features/wishlist/data/data_source/wishlist_data_source.dart';
+import 'package:shopify/features/wishlist/domain/wishlist_repo.dart';
 
-class WishlistRepoImplementation implements IwishlistServiceRepo {
-  FireStoreService fireStoreService = FireStoreService();
+class WishlistRepoImpl implements WishlistRepo {
+  final WishListDataSourceImpl wishListDataSourceImpl;
+
+  final FireBaseAuthService fireBaseAuthService;
+
+  WishlistRepoImpl({
+    required this.fireBaseAuthService,
+    required this.wishListDataSourceImpl,
+  });
+
   @override
-  Future<void> addProductToWishList(Product product) async {
+  Future<void> addProductToWishList(ProductEntity product) async {
+    final userId = await fireBaseAuthService.getCurrentUserId();
+    if (userId == null) {
+      throw Exception("User is not logged in");
+    }
     try {
-      await fireStoreService.addData(
-        path: 'wishlist',
-        data: product.toJson(),
-        documentId: product.id.toString(),
+      await wishListDataSourceImpl.addToWishList(
+        Product.fromEntity(product),
+        userId,
       );
     } catch (e) {
-      throw Exception(e.toString());
+      log("Error while adding Product to wishlist");
+      throw (e.toString());
     }
   }
 
   @override
   Future<void> clearWishList() async {
+    final userId = await fireBaseAuthService.getCurrentUserId();
+    if (userId == null) {
+      throw Exception("User is not logged in");
+    }
     try {
-      await fireStoreService.deleteData(
-        path: 'wishlist',
-        documentId: 'wishlist',
-      );
+      await wishListDataSourceImpl.clearWishList(userId);
     } catch (e) {
-      throw Exception(e.toString());
+      log("Error while clearing wishlist");
+      throw (e.toString());
     }
   }
 
   @override
-  Future<List<Product>> getWishListProducts() async {
+  Future<List<ProductEntity>> getWishListProducts() async {
+    final userId = await fireBaseAuthService.getCurrentUserId();
+    if (userId == null) {
+      throw Exception("User is not logged in");
+    }
     try {
-      final wishListProducts = await fireStoreService.getData(
-        path: 'users',
-        documentId: 'wishlist',
-      );
-      return wishListProducts.map((e) => Product.fromJson(e.toJson())).toList();
+      return await wishListDataSourceImpl.getWishListProducts(userId);
     } catch (e) {
-      throw Exception(e.toString());
+      log("Error while getting wishlist products");
+      throw (e.toString());
     }
   }
 
   @override
-  Future<void> removeProductFromWishList(Product product) async {
+  Future<void> removeProductFromWishList(ProductEntity product) async {
+    final userId = await fireBaseAuthService.getCurrentUserId();
+    if (userId == null) {
+      throw Exception("User is not logged in");
+    }
     try {
-      await fireStoreService.deleteData(
-        path: 'wishlist',
-        documentId: product.id.toString(),
+      await wishListDataSourceImpl.removeFromWishList(
+        Product.fromEntity(product),
+        userId,
       );
     } catch (e) {
-      throw Exception(e.toString());
+      log("Error while removing Product from wishlist");
+      throw (e.toString());
     }
+  }
+
+  @override
+  Future<bool> isInWishlist(int productId) async {
+    final userId = await fireBaseAuthService.getCurrentUserId();
+    if (userId == null) {
+      throw Exception("User is not logged in");
+    }
+    return wishListDataSourceImpl.checkIfInWishList(
+      productId.toString(),
+      userId,
+    );
   }
 }

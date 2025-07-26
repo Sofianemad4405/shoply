@@ -11,6 +11,8 @@ import 'package:shopify/features/cart/presentation/cubits/cubit/cart_cubit.dart'
 import 'package:shopify/features/category/presentation/cubit/caterories_products_cubit/category_products_cubit.dart';
 import 'package:shopify/features/category/presentation/cubit/home_categories_cubit/home_categories_cubit.dart';
 import 'package:shopify/features/search/presentation/cubit/cubit/search_cubit.dart';
+import 'package:shopify/features/wishlist/data/repo/wishlist_repo_implementation.dart';
+import 'package:shopify/features/wishlist/presentation/cubit/cubit/wishlist_cubit.dart';
 import 'package:shopify/firebase_options.dart';
 import 'package:shopify/shoply.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,6 +43,12 @@ void main() async {
                       (context) => CartCubit(
                         cartService: GetItService.getIt.get<CartRepoImpl>(),
                       )..getCartProducts(),
+                ),
+                BlocProvider(
+                  create:
+                      (context) => WishlistCubit(
+                        GetItService.getIt.get<WishlistRepoImpl>(),
+                      )..getWishlistProducts(),
                 ),
               ],
               child: const Shoply(),

@@ -8,7 +8,6 @@ import 'package:shopify/core/widgets/custom_app_bar.dart';
 import 'package:shopify/core/widgets/grid_or_list.dart';
 import 'package:shopify/features/category/presentation/widgets/category_products.dart';
 import 'package:shopify/features/home/presentation/widgets/featured_products_list.dart';
-import 'package:shopify/features/home/presentation/widgets/product_details.dart';
 
 class FeaturedProducts extends StatefulWidget {
   const FeaturedProducts({super.key, required this.products});
@@ -78,18 +77,10 @@ class _FeaturedProductsState extends State<FeaturedProducts> {
                           inHome: false,
                         )
                         : ListView.builder(
-                          shrinkWrap: true,
                           itemCount: widget.products.length,
                           itemBuilder: (context, index) {
-                            return GestureDetector(
-                              onTap:
-                                  () => context.push(
-                                    ProductDetails.routeName,
-                                    arguments: widget.products[index],
-                                  ),
-                              child: ProductListTile(
-                                product: widget.products[index],
-                              ),
+                            return ProductListTile(
+                              product: widget.products[index],
                             );
                           },
                         ),

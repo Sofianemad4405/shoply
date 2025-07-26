@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:shopify/core/models/product_entity.dart';
 import 'package:shopify/core/utils/constants.dart';
+import 'package:shopify/core/utils/extention.dart';
 import 'package:shopify/core/utils/text_styles.dart';
 import 'package:shopify/features/cart/presentation/cubits/cubit/cart_cubit.dart';
 
@@ -22,56 +23,64 @@ class CartProductsList extends StatelessWidget {
         itemCount: products.length,
         itemBuilder: (context, index) {
           final product = products[index];
-          return ListTile(
-            contentPadding: EdgeInsets.zero,
-            leading: Image.network(product.image ?? Constants.holderImage),
-            title: Text(product.name, style: TextStyles.blackSemiBold),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "\$${product.price}",
-                  style: TextStyles.blackBold.copyWith(
-                    color: Color(0xff22C55E),
+          return GestureDetector(
+            onTap:
+                () =>
+                    context.push(Constants.kProductDetails, arguments: product),
+            child: ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: Image.network(product.image ?? Constants.holderImage),
+              title: Text(product.name, style: TextStyles.blackSemiBold),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "\$${product.price}",
+                    style: TextStyles.blackBold.copyWith(
+                      color: Color(0xff22C55E),
+                    ),
                   ),
-                ),
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        context.read<CartCubit>().decreaseProductQuantity(
-                          product,
-                        );
-                        log(product.quantity.toString());
-                      },
-                      child: SvgPicture.asset("assets/imgs/svgs/minus.svg"),
-                    ),
-                    Gap(10),
-                    Text(
-                      "${product.quantity}",
-                      style: TextStyles.blackSemiBold,
-                    ),
-                    Gap(10),
-                    GestureDetector(
-                      onTap: () {
-                        context.read<CartCubit>().increaseQuantity(product);
-                        log(product.quantity.toString());
-                      },
-                      child: SvgPicture.asset("assets/imgs/svgs/plus.svg"),
-                    ),
-                    Spacer(),
-                    GestureDetector(
-                      onTap: () {
-                        context.read<CartCubit>().deleteProductFromCart(
-                          product,
-                        );
-                        log(product.quantity.toString());
-                      },
-                      child: SvgPicture.asset("assets/imgs/svgs/trash.svg"),
-                    ),
-                  ],
-                ),
-              ],
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          context.read<CartCubit>().decreaseProductQuantity(
+                            product,
+                          );
+                          log(product.quantity.toString());
+                        },
+                        child: SvgPicture.asset("assets/imgs/svgs/minus.svg"),
+                      ),
+                      Gap(10),
+                      Text(
+                        "${product.quantity}",
+                        style: TextStyles.blackSemiBold,
+                      ),
+                      Gap(10),
+                      GestureDetector(
+                        onTap: () {
+                          context.read<CartCubit>().increaseQuantity(product);
+                          log(product.quantity.toString());
+                        },
+                        child: SvgPicture.asset("assets/imgs/svgs/plus.svg"),
+                      ),
+                      Spacer(),
+                      GestureDetector(
+                        onTap: () {
+                          context.read<CartCubit>().deleteProductFromCart(
+                            product,
+                          );
+                          log(product.quantity.toString());
+                        },
+                        child: SvgPicture.asset(
+                          "assets/imgs/svgs/trash.svg",
+                          color: Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           );
         },

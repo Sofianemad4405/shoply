@@ -48,9 +48,29 @@ class CartViewBody extends StatelessWidget {
                                 ),
                               ),
                             ),
+                        Gap(10),
+                        if (state is CartLoadedState)
+                          Row(
+                            children: [
+                              Text(
+                                "Total",
+                                style: TextStyles.blackBold.copyWith(
+                                  fontSize: 18,
+                                ),
+                              ),
+                              Spacer(),
+                              Text(
+                                "\$${context.read<CartCubit>().subTotal.toStringAsFixed(2)}",
+                                style: TextStyles.blackBold.copyWith(
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ],
+                          ),
+                        Gap(10),
+
                         if (state is CartLoadedState)
                           ProceedToCheckOutButton(text: "Proceed to checkout"),
-                        Gap(10),
                       ],
                     ),
                   ),

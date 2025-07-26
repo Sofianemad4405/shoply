@@ -13,13 +13,6 @@ class CustomAppBar extends StatelessWidget {
       children: [
         SvgPicture.asset("assets/imgs/svgs/logo.svg", height: 32, width: 32),
         Text("  $title", style: TextStyles.blackBold.copyWith(fontSize: 20)),
-        Spacer(),
-        !isCart!
-            ? SvgPicture.asset(
-              "assets/imgs/svgs/cart.svg",
-              colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcIn),
-            )
-            : SizedBox.shrink(),
       ],
     );
   }

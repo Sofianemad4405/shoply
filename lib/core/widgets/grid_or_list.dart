@@ -12,7 +12,7 @@ class GridOrList extends StatelessWidget {
       height: 34,
       width: 34,
       decoration: BoxDecoration(
-        color: !isGridView ? Colors.white : Color(0xffE9EAEC),
+        color: isGridView ? Colors.white : Color(0xffEFF0F1),
         borderRadius: BorderRadius.circular(6),
       ),
       child: SizedBox(

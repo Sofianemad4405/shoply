@@ -34,6 +34,22 @@ class CartCubit extends Cubit<CartState> {
     }
   }
 
+  Future<ProductEntity> getProduct(int id) async {
+    return cartProducts.firstWhere((p) => p.id == id);
+  }
+
+  void toggleCartOptimistically(ProductEntity product) {
+    if (isInCart(product.id)) {
+      cartProducts.removeWhere((item) => item.id == product.id);
+      emit(CartLoadedState(cartProducts: cartProducts));
+      deleteProductFromCart(product);
+    } else {
+      cartProducts.add(product);
+      emit(CartLoadedState(cartProducts: cartProducts));
+      addProductToCart(product);
+    }
+  }
+
   Future<void> getCartProducts() async {
     cartProducts = await cartService.getCartProducts();
     cartProductIds = cartProducts.map((e) => e.id).toSet();
@@ -47,6 +63,11 @@ class CartCubit extends Cubit<CartState> {
   }
 
   Future<void> deleteProductFromCart(ProductEntity product) async {
+    if (cartProducts.isEmpty) {
+      emit(CartNoProductsState());
+    }
+    emit(CartRemovingState());
+    emit(CartLoadedState(cartProducts: cartProducts));
     final index = cartProducts.indexWhere((p) => p.id == product.id);
     if (index != -1) {
       cartProducts.removeAt(index);
@@ -59,9 +80,14 @@ class CartCubit extends Cubit<CartState> {
           ? CartNoProductsState()
           : CartLoadedState(cartProducts: cartProducts),
     );
+    if (cartProducts.isEmpty) {
+      emit(CartNoProductsState());
+    }
   }
 
   Future<void> addProductToCart(ProductEntity product) async {
+    emit(CartAddingState());
+    emit(CartLoadedState(cartProducts: cartProducts));
     AddProductToCart(cartService).call(product);
     await getCartProducts();
     emit(CartLoadedState(cartProducts: cartProducts));

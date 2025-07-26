@@ -5,6 +5,8 @@ import 'package:shopify/features/auth/data/repos/auth_repo_implementation.dart';
 import 'package:shopify/features/auth/domain/repos/auth_repo.dart';
 import 'package:shopify/features/cart/data/data_sources/cart_data_source.dart';
 import 'package:shopify/features/cart/data/repos/cart_repo_impl.dart';
+import 'package:shopify/features/wishlist/data/data_source/wishlist_data_source.dart';
+import 'package:shopify/features/wishlist/data/repo/wishlist_repo_implementation.dart';
 
 final getIt = GetIt.instance;
 
@@ -24,6 +26,18 @@ void setupGetit() {
         fireStoreService: getIt<FireStoreService>(),
         fireBaseAuthService: getIt<FireBaseAuthService>(),
       ),
+    ),
+  );
+  getIt.registerSingleton<WishListDataSourceImpl>(
+    WishListDataSourceImpl(
+      fireStoreService: getIt<FireStoreService>(),
+      fireBaseAuthService: getIt<FireBaseAuthService>(),
+    ),
+  );
+  getIt.registerSingleton<WishlistRepoImpl>(
+    WishlistRepoImpl(
+      fireBaseAuthService: getIt<FireBaseAuthService>(),
+      wishListDataSourceImpl: getIt<WishListDataSourceImpl>(),
     ),
   );
 }

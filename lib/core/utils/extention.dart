@@ -12,8 +12,12 @@ extension NavigationExtension on BuildContext {
   }
 
   /// Push and remove all the previous routes until the new one.
-  void pushAndRemoveUntil(String routeName) {
-    Navigator.of(this).pushNamedAndRemoveUntil(routeName, (route) => false);
+  void pushAndRemoveUntil(String routeName, {Object? arguments}) {
+    Navigator.of(this).pushNamedAndRemoveUntil(
+      routeName,
+      (route) => false,
+      arguments: arguments,
+    );
   }
 
   /// Pop the current route off the stack.

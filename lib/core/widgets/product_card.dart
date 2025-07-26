@@ -8,17 +8,11 @@ import 'package:shopify/core/utils/constants.dart';
 import 'package:shopify/core/utils/extention.dart';
 import 'package:shopify/features/cart/presentation/cubits/cubit/cart_cubit.dart';
 import 'package:shopify/features/home/presentation/widgets/product_details.dart';
+import 'package:shopify/features/wishlist/presentation/cubit/cubit/wishlist_cubit.dart';
 
 class ProductCard extends StatefulWidget {
-  const ProductCard({
-    super.key,
-    required this.product,
-    required this.isInWishlist,
-    required this.isInCart,
-  });
+  const ProductCard({super.key, required this.product});
   final ProductEntity product;
-  final bool isInWishlist;
-  final bool isInCart;
 
   @override
   State<ProductCard> createState() => _ProductCardState();
@@ -59,13 +53,25 @@ class _ProductCardState extends State<ProductCard> {
                 Positioned(
                   top: 10,
                   right: 10,
-                  child: GestureDetector(
-                    onTap: () {},
-                    child: Icon(
-                      widget.isInWishlist ? Iconsax.heart : Iconsax.heart_copy,
-                      size: 30,
-                      color: widget.isInWishlist ? Colors.red : Colors.grey,
-                    ),
+                  child: BlocBuilder<WishlistCubit, WishlistState>(
+                    builder: (context, state) {
+                      final wishlistCubit = context.read<WishlistCubit>();
+                      final isLiked = wishlistCubit.isInWishlist(
+                        widget.product.id,
+                      );
+                      return GestureDetector(
+                        onTap: () {
+                          wishlistCubit.toggleWishlistOptimistically(
+                            widget.product,
+                          );
+                        },
+                        child: Icon(
+                          isLiked ? Iconsax.heart : Iconsax.heart_copy,
+                          size: 30,
+                          color: isLiked ? Colors.red : Colors.grey,
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],
@@ -118,19 +124,7 @@ class _ProductCardState extends State<ProductCard> {
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 child: BlocBuilder<CartCubit, CartState>(
                   builder: (context, state) {
-                    final cartCubit = context.read<CartCubit>();
-                    final isInCart = cartCubit.isInCart(widget.product.id);
-                    return AddButton(
-                      product: widget.product,
-                      onTap: () {
-                        if (isInCart) {
-                          cartCubit.deleteProductFromCart(widget.product);
-                        } else {
-                          cartCubit.addProductToCart(widget.product);
-                        }
-                      },
-                      isAdded: isInCart,
-                    );
+                    return AddButton(product: widget.product);
                   },
                 ),
               ),
@@ -143,15 +137,8 @@ class _ProductCardState extends State<ProductCard> {
 }
 
 class AddButton extends StatefulWidget {
-  const AddButton({
-    super.key,
-    required this.product,
-    required this.isAdded,
-    required this.onTap,
-  });
-  final bool isAdded;
+  const AddButton({super.key, required this.product});
   final ProductEntity product;
-  final VoidCallback onTap;
 
   @override
   State<AddButton> createState() => _AddButtonState();
@@ -161,20 +148,30 @@ class _AddButtonState extends State<AddButton> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: widget.onTap,
+      onTap: () {
+        context.read<CartCubit>().toggleCartOptimistically(widget.product);
+      },
       child: Container(
         width: 137.62.w,
         height: 23.98.h,
         decoration: BoxDecoration(
-          color: widget.isAdded ? Colors.white : const Color(0xFF22C55E),
+          color:
+              context.read<CartCubit>().isInCart(widget.product.id)
+                  ? Colors.white
+                  : const Color(0xFF22C55E),
           borderRadius: BorderRadius.circular(6),
         ),
         child: Center(
           child: Text(
-            widget.isAdded ? 'remove from cart' : 'Add',
+            context.read<CartCubit>().isInCart(widget.product.id)
+                ? 'remove from cart'
+                : 'Add',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: widget.isAdded ? Colors.red : Colors.white,
+              color:
+                  context.read<CartCubit>().isInCart(widget.product.id)
+                      ? Colors.red
+                      : Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.w400,
             ),

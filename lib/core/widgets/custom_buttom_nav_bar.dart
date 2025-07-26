@@ -54,8 +54,7 @@ class CustomNavBar extends StatelessWidget {
               ),
               BottomNavigationBarItem(
                 icon: Stack(
-                  clipBehavior:
-                      Clip.none, // 👈 مهم علشان يسمح للدائرة بالخروج من حدود الأيقونة
+                  clipBehavior: Clip.none,
                   children: [
                     SvgPicture.asset(
                       "assets/imgs/svgs/cart.svg",
@@ -95,9 +94,20 @@ class CustomNavBar extends StatelessWidget {
               ),
               BottomNavigationBarItem(
                 icon: SvgPicture.asset(
-                  "assets/imgs/svgs/profile.svg",
+                  "assets/imgs/svgs/wishlist.svg",
                   colorFilter: ColorFilter.mode(
                     currentIndex == 3 ? Color(0xff22C55E) : Color(0xff6B7280),
+                    BlendMode.srcIn,
+                  ),
+                ),
+                label: 'Wishlist',
+              ),
+
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                  "assets/imgs/svgs/profile.svg",
+                  colorFilter: ColorFilter.mode(
+                    currentIndex == 4 ? Color(0xff22C55E) : Color(0xff6B7280),
                     BlendMode.srcIn,
                   ),
                 ),

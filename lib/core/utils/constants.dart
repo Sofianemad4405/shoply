@@ -2,43 +2,30 @@ import 'package:shopify/core/models/product_model.dart';
 
 class Constants {
   static List<String> categoryImages = [
-    'assets/imgs/category_svgs/phones.svg',
-    'assets/imgs/category_svgs/beauty.svg',
-    'assets/imgs/category_svgs/phones.svg',
-    'assets/imgs/category_svgs/men-shirts.svg',
-    'assets/imgs/category_svgs/home_category.svg',
-    'assets/imgs/category_svgs/Sports.svg',
-    'assets/imgs/category_svgs/kitchen.svg',
-    'assets/imgs/category_svgs/fragrances.svg',
-    'assets/imgs/category_svgs/men-shirts.svg',
-    'assets/imgs/category_svgs/furniture.svg',
-    'assets/imgs/category_svgs/groceries.svg',
-    'assets/imgs/category_svgs/laptops.svg',
-    'assets/imgs/category_svgs/men-shoes.svg',
-    'assets/imgs/category_svgs/men\'s-watches.svg',
-    'assets/imgs/category_svgs/mobile-accessy',
-    'assets/imgs/category_svgs/motorcycle.svg',
-    'assets/imgs/category_svgs/skin-cars.svg',
-    'assets/imgs/category_svgs/sun-glasses.svg',
-    'assets/imgs/category_svgs/tablets.svg',
-    'assets/imgs/category_svgs/tops.svg',
-    'assets/imgs/category_svgs/vehicles.svg',
-    'assets/imgs/category_svgs/women\'s-bags.svg',
-    'assets/imgs/category_svgs/women\'s-dress.svg',
-    'assets/imgs/category_svgs/jewellery.svg',
-    'assets/imgs/category_svgs/women\'s-shoes.svg',
-    'assets/imgs/category_svgs/women\'s-watches.svg',
-  ];
-  static List<String> myImages = [
-    'assets/imgs/photo_2025-06-09_19-34-56.jpg',
-    'assets/imgs/photo_2025-06-09_19-35-12.jpg',
-    'assets/imgs/photo_2025-06-09_19-35-16.jpg',
-    'assets/imgs/photo_2025-06-09_19-35-19.jpg',
-    'assets/imgs/photo_2025-06-09_19-35-21.jpg',
-    'assets/imgs/photo_2025-06-09_19-35-24.jpg',
-    'assets/imgs/photo_2025-06-09_19-35-27.jpg',
-    'assets/imgs/photo_2025-06-09_19-35-30.jpg',
-    'assets/imgs/photo_2025-06-09_19-35-33.jpg',
+    'assets/imgs/category_svgs/beauty.svg', // beauty
+    'assets/imgs/category_svgs/fragrances.svg', // fragrances
+    'assets/imgs/category_svgs/furniture.svg', // furniture
+    'assets/imgs/category_svgs/groceries.svg', // groceries
+    'assets/imgs/category_svgs/home_category.svg', // home-decoration
+    'assets/imgs/category_svgs/kitchen.svg', // kitchen-accessories
+    'assets/imgs/category_svgs/laptops.svg', // laptops
+    'assets/imgs/category_svgs/men-shirts.svg', // mens-shirts
+    'assets/imgs/category_svgs/men-shoes.svg', // mens-shoes
+    'assets/imgs/category_svgs/men\'s-watches.svg', // mens-watches
+    'assets/imgs/category_svgs/mobile-accessy.svg', // mobile-accessories (تأكد من امتداد .svg)
+    'assets/imgs/category_svgs/motorcycle.svg', // motorcycle
+    'assets/imgs/category_svgs/skin-cars.svg', // skin-care (تأكد من spelling الصحيح "skin-care")
+    'assets/imgs/category_svgs/phones.svg', // smartphones
+    'assets/imgs/category_svgs/Sports.svg', // sports-accessories
+    'assets/imgs/category_svgs/sun-glasses.svg', // sunglasses
+    'assets/imgs/category_svgs/tablets.svg', // tablets
+    'assets/imgs/category_svgs/tops.svg', // tops
+    'assets/imgs/category_svgs/vehicles.svg', // vehicle
+    'assets/imgs/category_svgs/women\'s-bags.svg', // womens-bags
+    'assets/imgs/category_svgs/women\'s-dress.svg', // womens-dresses
+    'assets/imgs/category_svgs/jewellery.svg', // womens-jewellery
+    'assets/imgs/category_svgs/women\'s-shoes.svg', // womens-shoes
+    'assets/imgs/category_svgs/women\'s-watches.svg', // womens-watches
   ];
 
   static String holderImage =
@@ -52,6 +39,7 @@ class Constants {
   static const String kSignIn = "signin";
   static const String kRoot = "root";
   static const String kCategories = "categories";
+  static const String kWishlist = "wishlist";
   static const String kCategoryProducts = "categoryProducts";
   static const String kProductDetails = "productDetails";
   static const String kFeaturedProducts = "Featured Products";

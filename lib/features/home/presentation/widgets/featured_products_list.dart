@@ -26,11 +26,7 @@ class FeaturedProductsList extends StatelessWidget {
       physics:
           inHome ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),
       itemBuilder: (context, index) {
-        return ProductCard(
-          product: products[index],
-          isInCart: false,
-          isInWishlist: false,
-        );
+        return ProductCard(product: products[index]);
       },
     );
   }

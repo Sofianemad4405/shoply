@@ -28,8 +28,8 @@ class _CategoriesPageViewState extends State<CategoriesPageView> {
       body: SafeArea(
         child: Column(
           children: [
-            Container(
-              decoration: BoxDecoration(color: Colors.white),
+            SizedBox(
+              // decoration: BoxDecoration(color: Colors.white),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(

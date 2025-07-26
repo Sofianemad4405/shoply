@@ -36,7 +36,7 @@ class SignInPageViewBlocConsumer extends StatelessWidget {
           Prefs.setBool(Constants.kIsLoggedIn, true);
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => Root()),
+            MaterialPageRoute(builder: (context) => Root(index: 0)),
             (route) => false,
           );
         }

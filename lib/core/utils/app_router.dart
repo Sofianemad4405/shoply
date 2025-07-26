@@ -8,6 +8,7 @@ import 'package:shopify/features/category/presentation/widgets/category_products
 import 'package:shopify/features/home/presentation/widgets/featured_products.dart';
 import 'package:shopify/features/on_boarding/widgets/on_boarding_screen.dart';
 import 'package:shopify/features/home/presentation/widgets/product_details.dart';
+import 'package:shopify/features/wishlist/presentation/wishlist_view.dart';
 import 'package:shopify/root.dart';
 
 class AppRouter {
@@ -20,7 +21,10 @@ class AppRouter {
       case Constants.kSignUp:
         return MaterialPageRoute(builder: (_) => SignUpPageView());
       case Constants.kRoot:
-        return MaterialPageRoute(builder: (_) => Root());
+        final index = settings.arguments;
+        return MaterialPageRoute(
+          builder: (_) => Root(index: index is int ? index : 0),
+        );
       case Constants.kCategories:
         return MaterialPageRoute(builder: (_) => CategoriesPageView());
       case Constants.kCategoryProducts:
@@ -44,6 +48,8 @@ class AppRouter {
                 products: settings.arguments as List<ProductEntity>,
               ),
         );
+      case Constants.kWishlist:
+        return MaterialPageRoute(builder: (_) => WishlistView());
       default:
         return MaterialPageRoute(
           builder:

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:shopify/core/models/product_entity.dart';
 import 'package:shopify/core/utils/constants.dart';
@@ -9,6 +10,7 @@ import 'package:shopify/core/utils/extention.dart';
 import 'package:shopify/core/utils/text_styles.dart';
 import 'package:shopify/core/widgets/custom_app_bar.dart';
 import 'package:shopify/core/widgets/grid_or_list.dart';
+import 'package:shopify/features/cart/presentation/cubits/cubit/cart_cubit.dart';
 import 'package:shopify/features/category/presentation/cubit/caterories_products_cubit/category_products_cubit.dart';
 import 'package:shopify/features/category/presentation/widgets/pop_up_menu.dart';
 import 'package:shopify/core/models/product_model.dart';
@@ -51,15 +53,13 @@ class _CategoryProductsState extends State<CategoryProducts> {
       body: SafeArea(
         child: Column(
           children: [
-            Container(
-              decoration: BoxDecoration(color: Colors.white),
+            SizedBox(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   children: [
-                    Gap(10),
                     CustomAppBar(),
-                    Gap(30),
+                    Gap(20),
                     GestureDetector(
                       onTap: () => context.pop(),
                       child: Row(
@@ -185,8 +185,6 @@ class _CategoryProductsState extends State<CategoryProducts> {
                                   itemBuilder: (context, index) {
                                     return ProductCard(
                                       product: products[index],
-                                      isInCart: false,
-                                      isInWishlist: false,
                                     );
                                   },
                                 ),
@@ -257,9 +255,70 @@ class ProductListTile extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               Gap(10),
-              Text(
-                "\$${product.price}",
-                style: TextStyle(color: const Color(0xFF22C55E)),
+              Row(
+                children: [
+                  Text(
+                    "\$${product.price}",
+                    style: TextStyle(color: const Color(0xFF22C55E)),
+                  ),
+                  Spacer(),
+                  BlocConsumer<CartCubit, CartState>(
+                    listener: (context, state) {
+                      if (state is CartAddingState) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text("Adding product to cart..."),
+                            behavior: SnackBarBehavior.floating,
+                            backgroundColor: Colors.green,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            duration: Duration(milliseconds: 500),
+                          ),
+                        );
+                      } else if (state is CartRemovingState) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text(
+                              "Removing product from cart...",
+                            ),
+                            duration: Duration(seconds: 1),
+                            behavior: SnackBarBehavior.floating,
+                            backgroundColor: Colors.red,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                    builder: (context, state) {
+                      return GestureDetector(
+                        onTap: () {
+                          context.read<CartCubit>().toggleCartOptimistically(
+                            product,
+                          );
+                        },
+                        child:
+                            !context.read<CartCubit>().isInCart(product.id)
+                                ? SvgPicture.asset(
+                                  "assets/imgs/svgs/cart.svg",
+                                  colorFilter: ColorFilter.mode(
+                                    const Color(0xFF22C55E),
+                                    BlendMode.srcIn,
+                                  ),
+                                )
+                                : SvgPicture.asset(
+                                  "assets/imgs/svgs/trash.svg",
+                                  colorFilter: ColorFilter.mode(
+                                    const Color.fromARGB(255, 255, 17, 0),
+                                    BlendMode.srcIn,
+                                  ),
+                                ),
+                      );
+                    },
+                  ),
+                ],
               ),
             ],
           ),

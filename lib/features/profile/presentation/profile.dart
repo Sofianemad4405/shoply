@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:shopify/core/utils/constants.dart';
+import 'package:shopify/core/utils/extention.dart';
 import 'package:shopify/core/utils/text_styles.dart';
 import 'package:shopify/core/widgets/custom_app_bar.dart';
 import 'package:shopify/features/profile/presentation/widgets/custom_list_tile.dart';
@@ -74,12 +76,6 @@ class _ProfileState extends State<Profile> {
                   CustomListTile(
                     leadingIcon: "assets/imgs/svgs/my_orders.svg",
                     text: "My Orders",
-                    traling: "assets/imgs/svgs/arrow.svg",
-                    onTap: () {},
-                  ),
-                  CustomListTile(
-                    leadingIcon: "assets/imgs/svgs/wishlist.svg",
-                    text: "Wishlist",
                     traling: "assets/imgs/svgs/arrow.svg",
                     onTap: () {},
                   ),
