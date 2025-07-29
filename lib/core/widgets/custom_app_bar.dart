@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shopify/core/utils/constants.dart';
+import 'package:shopify/core/utils/extention.dart';
 import 'package:shopify/core/utils/text_styles.dart';
 
 class CustomAppBar extends StatelessWidget {
@@ -13,6 +15,15 @@ class CustomAppBar extends StatelessWidget {
       children: [
         SvgPicture.asset("assets/imgs/svgs/logo.svg", height: 32, width: 32),
         Text("  $title", style: TextStyles.blackBold.copyWith(fontSize: 20)),
+        Spacer(),
+        if (isCart == true)
+          GestureDetector(
+            onTap: () => context.push(Constants.kFeaturedProducts),
+            child: SvgPicture.asset(
+              "assets/imgs/svgs/cart.svg",
+              colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcIn),
+            ),
+          ),
       ],
     );
   }

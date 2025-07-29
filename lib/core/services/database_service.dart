@@ -1,3 +1,6 @@
+import 'package:shopify/core/models/product_model.dart';
+import 'package:shopify/features/checkout/data/models/delivery_address_model.dart';
+
 abstract class DatabaseService {
   Future<void> addData({
     required String path,
@@ -7,7 +10,13 @@ abstract class DatabaseService {
 
   Future<void> deleteData({required String path, required String documentId});
 
-  Future<dynamic> getData({required String path, String? documentId});
+  Future<List<Product>> getData({required String path, String? documentId});
+
+  Future<Delivery> getDeliveryAddresses({
+    required String path,
+    required String documentId,
+  });
+
   Future<bool> checkIfDataExists({
     required String path,
     required String documentId,

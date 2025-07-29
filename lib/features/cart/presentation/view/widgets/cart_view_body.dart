@@ -1,11 +1,16 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:shopify/core/utils/constants.dart';
+import 'package:shopify/core/utils/extention.dart';
 import 'package:shopify/core/utils/text_styles.dart';
 import 'package:shopify/core/widgets/custom_app_bar.dart';
 import 'package:shopify/features/cart/presentation/cubits/cubit/cart_cubit.dart';
 import 'package:shopify/features/cart/presentation/view/widgets/cart_products_list.dart';
 import 'package:shopify/features/cart/presentation/view/widgets/proceed_to_checkout_button.dart';
+import 'package:shopify/features/checkout/presentation/cubit/checkout_cubit.dart';
 
 class CartViewBody extends StatelessWidget {
   const CartViewBody({super.key});
@@ -18,7 +23,7 @@ class CartViewBody extends StatelessWidget {
         child: Column(
           children: [
             Gap(10),
-            CustomAppBar(),
+            CustomAppBar(isCart: true),
             Gap(10),
             BlocConsumer<CartCubit, CartState>(
               listener: (context, state) {
@@ -43,7 +48,7 @@ class CartViewBody extends StatelessWidget {
                             : Center(
                               child: Text(
                                 "Your Shoply cart is empty",
-                                style: TextStyles.blackMedium.copyWith(
+                                style: TextStyles.blackBold.copyWith(
                                   fontSize: 24,
                                 ),
                               ),
@@ -70,7 +75,16 @@ class CartViewBody extends StatelessWidget {
                         Gap(10),
 
                         if (state is CartLoadedState)
-                          ProceedToCheckOutButton(text: "Proceed to checkout"),
+                          ProceedToCheckOutButton(
+                            text: "Proceed to checkout",
+                            onTap: () {
+                              log("message");
+                              context
+                                  .read<CheckoutCubit>()
+                                  .addProductsToCheckout(state.cartProducts);
+                              context.push(Constants.kCheckout);
+                            },
+                          ),
                       ],
                     ),
                   ),

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
+import 'package:iconsax/iconsax.dart';
+
 import 'package:shopify/core/models/product_entity.dart';
 import 'package:shopify/core/utils/constants.dart';
 import 'package:shopify/core/utils/extention.dart';
@@ -16,6 +18,7 @@ import 'package:shopify/features/category/presentation/widgets/pop_up_menu.dart'
 import 'package:shopify/core/models/product_model.dart';
 import 'package:shopify/core/widgets/product_card.dart';
 import 'package:shopify/features/home/presentation/widgets/product_details.dart';
+import 'package:shopify/features/wishlist/presentation/cubit/cubit/wishlist_cubit.dart';
 
 class CategoryProducts extends StatefulWidget {
   const CategoryProducts({super.key, required this.categoryName});
@@ -49,6 +52,8 @@ class _CategoryProductsState extends State<CategoryProducts> {
   bool isGridView = true;
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -179,7 +184,8 @@ class _CategoryProductsState extends State<CategoryProducts> {
                                         crossAxisCount: 2,
                                         crossAxisSpacing: 16,
                                         mainAxisSpacing: 16,
-                                        childAspectRatio: .65,
+                                        childAspectRatio:
+                                            screenWidth / (screenHeight / 1.21),
                                       ),
                                   itemCount: products.length,
                                   itemBuilder: (context, index) {
@@ -245,6 +251,8 @@ class ProductListTile extends StatelessWidget {
           title: Text(
             product.name,
             style: TextStyles.blackBold.copyWith(fontSize: 16),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -254,7 +262,6 @@ class ProductListTile extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              Gap(10),
               Row(
                 children: [
                   Text(
@@ -262,35 +269,58 @@ class ProductListTile extends StatelessWidget {
                     style: TextStyle(color: const Color(0xFF22C55E)),
                   ),
                   Spacer(),
+                  BlocBuilder<WishlistCubit, WishlistState>(
+                    builder: (context, state) {
+                      return IconButton(
+                        icon: Icon(
+                          context.read<WishlistCubit>().isInWishlist(product.id)
+                              ? Iconsax.heart5
+                              : Iconsax.heart,
+                          color:
+                              context.read<WishlistCubit>().isInWishlist(
+                                    product.id,
+                                  )
+                                  ? Colors.red
+                                  : Colors.grey,
+                        ),
+                        onPressed: () {
+                          context
+                              .read<WishlistCubit>()
+                              .toggleWishlistOptimistically(product);
+                        },
+                      );
+                    },
+                  ),
+
                   BlocConsumer<CartCubit, CartState>(
                     listener: (context, state) {
-                      if (state is CartAddingState) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: const Text("Adding product to cart..."),
-                            behavior: SnackBarBehavior.floating,
-                            backgroundColor: Colors.green,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            duration: Duration(milliseconds: 500),
-                          ),
-                        );
-                      } else if (state is CartRemovingState) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: const Text(
-                              "Removing product from cart...",
-                            ),
-                            duration: Duration(seconds: 1),
-                            behavior: SnackBarBehavior.floating,
-                            backgroundColor: Colors.red,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                        );
-                      }
+                      // if (state is CartAddingState) {
+                      //   ScaffoldMessenger.of(context).showSnackBar(
+                      //     SnackBar(
+                      //       content: const Text("Adding product to cart..."),
+                      //       behavior: SnackBarBehavior.floating,
+                      //       backgroundColor: Colors.green,
+                      //       shape: RoundedRectangleBorder(
+                      //         borderRadius: BorderRadius.circular(12),
+                      //       ),
+                      //       duration: Duration(milliseconds: 500),
+                      //     ),
+                      //   );
+                      // } else if (state is CartRemovingState) {
+                      //   ScaffoldMessenger.of(context).showSnackBar(
+                      //     SnackBar(
+                      //       content: const Text(
+                      //         "Removing product from cart...",
+                      //       ),
+                      //       duration: Duration(seconds: 1),
+                      //       behavior: SnackBarBehavior.floating,
+                      //       backgroundColor: Colors.red,
+                      //       shape: RoundedRectangleBorder(
+                      //         borderRadius: BorderRadius.circular(12),
+                      //       ),
+                      //     ),
+                      //   );
+                      // }
                     },
                     builder: (context, state) {
                       return GestureDetector(
@@ -304,14 +334,14 @@ class ProductListTile extends StatelessWidget {
                                 ? SvgPicture.asset(
                                   "assets/imgs/svgs/cart.svg",
                                   colorFilter: ColorFilter.mode(
-                                    const Color(0xFF22C55E),
+                                    Colors.grey,
                                     BlendMode.srcIn,
                                   ),
                                 )
                                 : SvgPicture.asset(
                                   "assets/imgs/svgs/trash.svg",
                                   colorFilter: ColorFilter.mode(
-                                    const Color.fromARGB(255, 255, 17, 0),
+                                    Colors.red,
                                     BlendMode.srcIn,
                                   ),
                                 ),

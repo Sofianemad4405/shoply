@@ -72,7 +72,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         hintText: widget.hintText,
         prefixIcon: widget.prefixIcon,
 
-        hintStyle: TextStyle(color: Color(0xffCCCCCC)),
+        hintStyle: TextStyle(color: Colors.black38),
         // البوردر العادي
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

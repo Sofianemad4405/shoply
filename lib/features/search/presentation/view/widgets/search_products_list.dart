@@ -11,13 +11,15 @@ class SearchProductsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Expanded(
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           crossAxisSpacing: 6,
           mainAxisSpacing: 4,
-          childAspectRatio: .65,
+          childAspectRatio: screenWidth / (screenHeight / 1.25),
         ),
         itemCount: products.length,
         itemBuilder: (context, index) {

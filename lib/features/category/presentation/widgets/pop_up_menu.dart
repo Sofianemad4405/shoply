@@ -34,14 +34,17 @@ class _CustomPopUpMenuState extends State<CustomPopUpMenu> {
         height: 29.69.h,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(9999),
+          borderRadius: BorderRadius.circular(4),
         ),
         child: SizedBox(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SvgPicture.asset(widget.image, height: 24),
-              Text(widget.title, style: TextStyles.blackBold),
+              Text(
+                widget.title,
+                style: TextStyles.blackMedium.copyWith(fontSize: 12),
+              ),
             ],
           ),
         ),

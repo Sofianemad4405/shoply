@@ -14,13 +14,15 @@ class FeaturedProductsList extends StatelessWidget {
   final bool inHome;
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return GridView.builder(
       shrinkWrap: true,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        crossAxisSpacing: 8,
-        mainAxisSpacing: 8,
-        childAspectRatio: 0.65,
+        crossAxisSpacing: 4,
+        mainAxisSpacing: 4,
+        childAspectRatio: screenWidth / (screenHeight / 1.4),
       ),
       itemCount: count,
       physics:

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:shopify/core/utils/constants.dart';
 import 'package:shopify/core/utils/extention.dart';
+import 'package:shopify/core/utils/fire_base_auth_service.dart';
+import 'package:shopify/core/utils/prefs.dart';
 import 'package:shopify/core/utils/text_styles.dart';
 import 'package:shopify/core/widgets/custom_app_bar.dart';
 import 'package:shopify/features/profile/presentation/widgets/custom_list_tile.dart';
@@ -100,7 +102,11 @@ class _ProfileState extends State<Profile> {
                   CustomListTile(
                     leadingIcon: "assets/imgs/svgs/log_out.svg",
                     text: "Logout",
-                    onTap: () {},
+                    onTap: () async {
+                      await FireBaseAuthService().signOut();
+                      context.pushAndRemoveUntil(Constants.kSignIn);
+                      Prefs.setBool(Constants.kIsLoggedIn, false);
+                    },
                     isLogOut: true,
                   ),
                 ],

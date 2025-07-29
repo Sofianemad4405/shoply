@@ -22,7 +22,7 @@ class _OnBoardingPageViewBodyState extends State<OnBoardingPageViewBody> {
     return Column(
       children: [
         Gap(10),
-        CustomAppBar(isCart: true),
+        CustomAppBar(isCart: false),
         Spacer(),
         Expanded(
           flex: 3,

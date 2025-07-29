@@ -146,8 +146,11 @@ class CategoriesGridView extends StatefulWidget {
 class _CategoriesGridViewState extends State<CategoriesGridView> {
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final height = MediaQuery.of(context).size.height;
     return SizedBox(
-      height: 200.h,
+      height: height * .3,
       child: GridView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
@@ -155,7 +158,7 @@ class _CategoriesGridViewState extends State<CategoriesGridView> {
           crossAxisCount: 4,
           crossAxisSpacing: 12,
           mainAxisSpacing: 12,
-          childAspectRatio: 0.8,
+          childAspectRatio: screenWidth / (screenHeight / 1.5),
         ),
         itemCount: context.read<HomeCategoriesCubit>().categories.length,
         itemBuilder: (context, index) {

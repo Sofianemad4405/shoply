@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shopify/core/services/database_service.dart';
 import 'package:shopify/core/models/product_model.dart';
+import 'package:shopify/features/checkout/data/models/delivery_address_model.dart';
 
 class FireStoreService implements DatabaseService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -59,6 +60,15 @@ class FireStoreService implements DatabaseService {
     return snapshot.docs.map((e) => Product.fromJson(e.data())).toList();
   }
 
+  @override
+  Future<Delivery> getDeliveryAddresses({
+    required String path,
+    required String documentId,
+  }) async {
+    var snapshot = await firestore.collection(path).doc(documentId).get();
+    return Delivery.fromJson(snapshot.data()!);
+  }
+
   Future<void> clearData({required String path}) async {
     log("Clearing all data from $path ...");
     final collection = firestore.collection(path);
@@ -80,6 +90,24 @@ class FireStoreService implements DatabaseService {
     log("Updating Data ... ");
     try {
       await firestore.collection(path).doc(documentId).update({field: value});
+    } on Exception catch (e) {
+      log("Error while updating data $e");
+      throw (e.toString());
+    }
+    log("Data Updated");
+  }
+
+  Future<void> updateMap({
+    required String path,
+    required String documentId,
+    required Map<String, dynamic> data,
+  }) async {
+    log("Updating Data ... ");
+    try {
+      await firestore
+          .collection(path)
+          .doc(documentId)
+          .set(data, SetOptions(merge: true));
     } on Exception catch (e) {
       log("Error while updating data $e");
       throw (e.toString());

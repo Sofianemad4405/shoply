@@ -40,6 +40,7 @@ class Constants {
   static const String kRoot = "root";
   static const String kCategories = "categories";
   static const String kWishlist = "wishlist";
+  static const String kCheckout = "checkout";
   static const String kCategoryProducts = "categoryProducts";
   static const String kProductDetails = "productDetails";
   static const String kFeaturedProducts = "Featured Products";

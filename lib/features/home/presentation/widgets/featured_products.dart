@@ -48,7 +48,7 @@ class _FeaturedProductsState extends State<FeaturedProducts> {
                         });
                       },
                       child: GridOrList(
-                        isGridView: !isGridView,
+                        isGridView: isGridView,
                         image: "assets/imgs/svgs/grid_view.svg",
                       ),
                     ),
@@ -60,7 +60,7 @@ class _FeaturedProductsState extends State<FeaturedProducts> {
                         });
                       },
                       child: GridOrList(
-                        isGridView: isGridView,
+                        isGridView: !isGridView,
                         image: "assets/imgs/svgs/list_view.svg",
                       ),
                     ),

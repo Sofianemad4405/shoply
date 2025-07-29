@@ -18,7 +18,8 @@ class CartProductsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: ListView.builder(
+      child: ListView.separated(
+        separatorBuilder: (context, index) => Divider(thickness: 0.5),
         shrinkWrap: true,
         itemCount: products.length,
         itemBuilder: (context, index) {

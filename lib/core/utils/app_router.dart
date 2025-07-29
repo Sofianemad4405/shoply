@@ -5,6 +5,7 @@ import 'package:shopify/features/auth/presentation/view/sign_in_page_view.dart';
 import 'package:shopify/features/auth/presentation/view/sign_up_page_view.dart';
 import 'package:shopify/features/category/presentation/widgets/categories_page_view.dart';
 import 'package:shopify/features/category/presentation/widgets/category_products.dart';
+import 'package:shopify/features/checkout/presentation/views/checkout.dart';
 import 'package:shopify/features/home/presentation/widgets/featured_products.dart';
 import 'package:shopify/features/on_boarding/widgets/on_boarding_screen.dart';
 import 'package:shopify/features/home/presentation/widgets/product_details.dart';
@@ -50,6 +51,10 @@ class AppRouter {
         );
       case Constants.kWishlist:
         return MaterialPageRoute(builder: (_) => WishlistView());
+
+      case Constants.kCheckout:
+        return MaterialPageRoute(builder: (_) => Checkout());
+
       default:
         return MaterialPageRoute(
           builder:

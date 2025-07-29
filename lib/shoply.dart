@@ -12,7 +12,7 @@ class Shoply extends StatelessWidget {
       onGenerateRoute: AppRouter.generateRoute,
       home: const SplashScreen(),
       theme: ThemeData(
-        appBarTheme: AppBarTheme(color: Colors.white),
+        appBarTheme: AppBarTheme(color: Color(0xffEFF0F1)),
         scaffoldBackgroundColor: Color(0xffEFF0F1),
         fontFamily: "Inter",
         useMaterial3: true,

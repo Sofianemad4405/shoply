@@ -10,6 +10,8 @@ import 'package:shopify/features/cart/data/repos/cart_repo_impl.dart';
 import 'package:shopify/features/cart/presentation/cubits/cubit/cart_cubit.dart';
 import 'package:shopify/features/category/presentation/cubit/caterories_products_cubit/category_products_cubit.dart';
 import 'package:shopify/features/category/presentation/cubit/home_categories_cubit/home_categories_cubit.dart';
+import 'package:shopify/features/checkout/data/repos/checkout_repo_impl.dart';
+import 'package:shopify/features/checkout/presentation/cubit/checkout_cubit.dart';
 import 'package:shopify/features/search/presentation/cubit/cubit/search_cubit.dart';
 import 'package:shopify/features/wishlist/data/repo/wishlist_repo_implementation.dart';
 import 'package:shopify/features/wishlist/presentation/cubit/cubit/wishlist_cubit.dart';
@@ -27,6 +29,19 @@ void main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
     log("✅ Firebase Initialized Successfully");
+    // final model = FirebaseAI.googleAI().generativeModel(
+    //   model: 'gemini-2.5-pro',
+    // );
+    // log("ai initialized");
+
+    // // Provide a prompt that contains text
+    // final prompt = [
+    //   Content.text('Tell me why messi is the best footballer in the history.'),
+    // ];
+
+    // // To generate text output, call generateContent with the text input
+    // final response = await model.generateContent(prompt);
+    // log("ai response: ${response.text}");
     setupGetit();
     runApp(
       ScreenUtilInit(
@@ -49,6 +64,14 @@ void main() async {
                       (context) => WishlistCubit(
                         GetItService.getIt.get<WishlistRepoImpl>(),
                       )..getWishlistProducts(),
+                ),
+                BlocProvider(
+                  create:
+                      (context) => CheckoutCubit(
+                        checkoutRepo:
+                            GetItService.getIt.get<CheckoutRepoImpl>(),
+                        cartCubit: GetItService.getIt.get<CartCubit>(),
+                      )..init(),
                 ),
               ],
               child: const Shoply(),

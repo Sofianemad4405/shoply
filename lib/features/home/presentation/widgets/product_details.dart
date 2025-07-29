@@ -36,6 +36,8 @@ class _ProductDetailsState extends State<ProductDetails> {
   int selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         title: Text("Product Details", style: TextStyles.blackBold),
@@ -49,7 +51,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             children: [
               Image.network(
                 widget.product.images?[selectedIndex] ?? Constants.holderImage,
-                height: 255.99.h,
+                height: 350.h,
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
@@ -94,10 +96,14 @@ class _ProductDetailsState extends State<ProductDetails> {
 
               Row(
                 children: [
-                  Text(
-                    widget.product.name,
-                    style: TextStyles.blackBold.copyWith(fontSize: 20),
-                    overflow: TextOverflow.ellipsis,
+                  SizedBox(
+                    width: screenWidth * .6,
+                    child: Text(
+                      widget.product.name,
+                      style: TextStyles.blackBold.copyWith(fontSize: 16),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
                   ),
                   Spacer(),
                   BlocBuilder<WishlistCubit, WishlistState>(
