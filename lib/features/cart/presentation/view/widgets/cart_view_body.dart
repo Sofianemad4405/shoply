@@ -23,7 +23,7 @@ class CartViewBody extends StatelessWidget {
         child: Column(
           children: [
             Gap(10),
-            CustomAppBar(isCart: true),
+            CustomAppBar(isCart: false),
             Gap(10),
             BlocConsumer<CartCubit, CartState>(
               listener: (context, state) {

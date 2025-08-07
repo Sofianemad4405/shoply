@@ -8,7 +8,8 @@ class WishlistProductsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return ListView.separated(
+      separatorBuilder: (context, index) => Divider(thickness: 0.8),
       itemCount: products.length,
       itemBuilder: (context, index) {
         return WishListItem(product: products[index]);

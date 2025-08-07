@@ -4,8 +4,8 @@ import 'package:shopify/core/widgets/custom_buttom_nav_bar.dart';
 import 'package:shopify/core/utils/prefs.dart';
 import 'package:shopify/features/cart/presentation/view/cart.dart';
 import 'package:shopify/features/home/presentation/home.dart';
-import 'package:shopify/features/profile/presentation/profile.dart';
 import 'package:shopify/features/search/presentation/view/widgets/search_page_view_body.dart';
+import 'package:shopify/features/profile/screens/profile.dart';
 import 'package:shopify/features/wishlist/presentation/wishlist_view.dart';
 
 class Root extends StatefulWidget {

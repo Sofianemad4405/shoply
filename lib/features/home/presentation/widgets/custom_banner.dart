@@ -8,8 +8,8 @@ class CustomBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 160,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
+      height: 100,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: Image.asset(image),

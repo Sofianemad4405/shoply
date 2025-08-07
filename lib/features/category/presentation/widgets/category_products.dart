@@ -185,7 +185,7 @@ class _CategoryProductsState extends State<CategoryProducts> {
                                         crossAxisSpacing: 16,
                                         mainAxisSpacing: 16,
                                         childAspectRatio:
-                                            screenWidth / (screenHeight / 1.21),
+                                            screenWidth / (screenHeight / 1.35),
                                       ),
                                   itemCount: products.length,
                                   itemBuilder: (context, index) {

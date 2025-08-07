@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shopify/core/services/database_service.dart';
 import 'package:shopify/core/models/product_model.dart';
+import 'package:shopify/core/utils/constants.dart';
+import 'package:shopify/features/auth/data/model/user_model.dart';
 import 'package:shopify/features/checkout/data/models/delivery_address_model.dart';
 
 class FireStoreService implements DatabaseService {
@@ -113,5 +115,32 @@ class FireStoreService implements DatabaseService {
       throw (e.toString());
     }
     log("Data Updated");
+  }
+
+  @override
+  Future<void> updateUserData({
+    required String path,
+    required String documentId,
+    required Map<String, dynamic> data,
+  }) async {
+    log("Updating Data ... ");
+    try {
+      await firestore.collection(path).doc(documentId).update(data);
+    } on Exception catch (e) {
+      log("Error while updating data $e");
+      throw (e.toString());
+    }
+    log("Data Updated");
+  }
+
+  @override
+  Future<UserModel> getUserData({required String userId}) async {
+    try {
+      var userEntity =
+          await firestore.collection(Constants.kUser).doc(userId).get();
+      return UserModel.fromJson(userEntity.data()!);
+    } catch (e) {
+      return UserModel.empty();
+    }
   }
 }

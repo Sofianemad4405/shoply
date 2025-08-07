@@ -1,4 +1,5 @@
 import 'package:shopify/core/models/product_model.dart';
+import 'package:shopify/features/auth/domain/models/user_entity.dart';
 import 'package:shopify/features/checkout/data/models/delivery_address_model.dart';
 
 abstract class DatabaseService {
@@ -21,4 +22,11 @@ abstract class DatabaseService {
     required String path,
     required String documentId,
   });
+
+  Future<void> updateUserData({
+    required String path,
+    required String documentId,
+    required Map<String, dynamic> data,
+  });
+  Future<UserEntity> getUserData({required String userId});
 }

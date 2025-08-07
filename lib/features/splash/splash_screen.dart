@@ -40,7 +40,11 @@ class _SplashScreenState extends State<SplashScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SvgPicture.asset("assets/imgs/svgs/logo.svg"),
+                  SvgPicture.asset(
+                    "assets/imgs/svgs/logo.svg",
+                    height: 40,
+                    width: 40,
+                  ),
                   Gap(20),
                   Text(
                     "Shoply",

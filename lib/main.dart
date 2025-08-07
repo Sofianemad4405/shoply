@@ -3,7 +3,9 @@ import 'dart:developer';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shopify/core/services/fire_store_service.dart';
 import 'package:shopify/core/services/getit_service.dart' as GetItService;
+import 'package:shopify/core/utils/fire_base_auth_service.dart';
 import 'package:shopify/core/utils/prefs.dart' show Prefs;
 import 'package:shopify/core/services/getit_service.dart';
 import 'package:shopify/features/cart/data/repos/cart_repo_impl.dart';
@@ -12,6 +14,7 @@ import 'package:shopify/features/category/presentation/cubit/caterories_products
 import 'package:shopify/features/category/presentation/cubit/home_categories_cubit/home_categories_cubit.dart';
 import 'package:shopify/features/checkout/data/repos/checkout_repo_impl.dart';
 import 'package:shopify/features/checkout/presentation/cubit/checkout_cubit.dart';
+import 'package:shopify/features/profile/presentation/cubit/cubit/profile_cubit.dart';
 import 'package:shopify/features/search/presentation/cubit/cubit/search_cubit.dart';
 import 'package:shopify/features/wishlist/data/repo/wishlist_repo_implementation.dart';
 import 'package:shopify/features/wishlist/presentation/cubit/cubit/wishlist_cubit.dart';
@@ -71,6 +74,14 @@ void main() async {
                         checkoutRepo:
                             GetItService.getIt.get<CheckoutRepoImpl>(),
                         cartCubit: GetItService.getIt.get<CartCubit>(),
+                      )..init(),
+                ),
+                BlocProvider(
+                  create:
+                      (context) => ProfileCubit(
+                        authService: GetItService.getIt.get<FireStoreService>(),
+                        fireBaseAuthService:
+                            GetItService.getIt.get<FireBaseAuthService>(),
                       )..init(),
                 ),
               ],

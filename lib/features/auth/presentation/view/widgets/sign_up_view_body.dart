@@ -103,7 +103,6 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
                   CustomButton(
                     text: "Create Account",
                     onPressed: () {
-                      log("message");
                       if (formKey.currentState!.validate()) {
                         context.read<SignupCubit>().signup(
                           name: name.text,

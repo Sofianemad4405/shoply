@@ -22,7 +22,11 @@ class WishlistCubit extends Cubit<WishlistState> {
   Future<void> getWishlistProducts() async {
     try {
       wishlistProducts = await wishlistService.getWishListProducts();
-      emit(WishlistProductsLoadedState(wishlistProducts: wishlistProducts));
+      if (wishlistProducts.isEmpty) {
+        emit(NoProductsInWIshlistState());
+      } else {
+        emit(WishlistProductsLoadedState(wishlistProducts: wishlistProducts));
+      }
     } catch (e) {
       emit(ErrorAddingProductToWishlistState(errorMessage: e.toString()));
     }
@@ -40,11 +44,9 @@ class WishlistCubit extends Cubit<WishlistState> {
   void toggleWishlistOptimistically(ProductEntity product) {
     if (isInWishlist(product.id)) {
       wishlistProducts.removeWhere((item) => item.id == product.id);
-      emit(WishlistProductsLoadedState(wishlistProducts: wishlistProducts));
       removeProductFromWishlist(product);
     } else {
       wishlistProducts.add(product);
-      emit(WishlistProductsLoadedState(wishlistProducts: wishlistProducts));
       addProductToWishlist(product);
     }
     if (wishlistProducts.isEmpty) {

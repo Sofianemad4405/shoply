@@ -14,14 +14,14 @@ class Constants {
     'assets/imgs/category_svgs/men\'s-watches.svg', // mens-watches
     'assets/imgs/category_svgs/mobile-accessy.svg', // mobile-accessories (تأكد من امتداد .svg)
     'assets/imgs/category_svgs/motorcycle.svg', // motorcycle
-    'assets/imgs/category_svgs/skin-cars.svg', // skin-care (تأكد من spelling الصحيح "skin-care")
+    'assets/imgs/category_svgs/skin-care.svg', // skin-care (تأكد من spelling الصحيح "skin-care")
     'assets/imgs/category_svgs/phones.svg', // smartphones
     'assets/imgs/category_svgs/Sports.svg', // sports-accessories
     'assets/imgs/category_svgs/sun-glasses.svg', // sunglasses
     'assets/imgs/category_svgs/tablets.svg', // tablets
     'assets/imgs/category_svgs/tops.svg', // tops
-    'assets/imgs/category_svgs/vehicles.svg', // vehicle
-    'assets/imgs/category_svgs/women\'s-bags.svg', // womens-bags
+    'assets/imgs/category_svgs/vehicle.svg', // vehicle
+    'assets/imgs/category_svgs/womens-bags.svg', // womens-bags
     'assets/imgs/category_svgs/women\'s-dress.svg', // womens-dresses
     'assets/imgs/category_svgs/jewellery.svg', // womens-jewellery
     'assets/imgs/category_svgs/women\'s-shoes.svg', // womens-shoes
@@ -44,6 +44,9 @@ class Constants {
   static const String kCategoryProducts = "categoryProducts";
   static const String kProductDetails = "productDetails";
   static const String kFeaturedProducts = "Featured Products";
+  static const String kHelpAndSupport = "help_and_support";
+  static const String profileImageKey = 'profile_image';
+
   // static const String kCart = "Cart";
 
   static String kAlreadyHaveAnAccount = "already have an account?";

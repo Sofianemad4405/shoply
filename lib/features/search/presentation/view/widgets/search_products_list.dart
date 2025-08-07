@@ -19,7 +19,7 @@ class SearchProductsList extends StatelessWidget {
           crossAxisCount: 2,
           crossAxisSpacing: 6,
           mainAxisSpacing: 4,
-          childAspectRatio: screenWidth / (screenHeight / 1.25),
+          childAspectRatio: screenWidth / (screenHeight / 1.35),
         ),
         itemCount: products.length,
         itemBuilder: (context, index) {

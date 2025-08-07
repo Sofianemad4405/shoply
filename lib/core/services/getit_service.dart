@@ -8,6 +8,7 @@ import 'package:shopify/features/cart/data/repos/cart_repo_impl.dart';
 import 'package:shopify/features/cart/presentation/cubits/cubit/cart_cubit.dart';
 import 'package:shopify/features/checkout/data/data_sources/checkout_data_source.dart';
 import 'package:shopify/features/checkout/data/repos/checkout_repo_impl.dart';
+import 'package:shopify/features/profile/presentation/cubit/cubit/profile_cubit.dart';
 import 'package:shopify/features/wishlist/data/data_source/wishlist_data_source.dart';
 import 'package:shopify/features/wishlist/data/repo/wishlist_repo_implementation.dart';
 import 'package:shopify/features/checkout/presentation/cubit/checkout_cubit.dart';
@@ -71,6 +72,13 @@ void setupGetit() {
     CheckoutCubit(
       cartCubit: getIt<CartCubit>(),
       checkoutRepo: getIt<CheckoutRepoImpl>(),
+    ),
+  );
+
+  getIt.registerSingleton<ProfileCubit>(
+    ProfileCubit(
+      authService: getIt<FireStoreService>(),
+      fireBaseAuthService: getIt<FireBaseAuthService>(),
     ),
   );
 }

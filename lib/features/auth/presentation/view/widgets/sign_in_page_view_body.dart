@@ -35,7 +35,7 @@ class _SigninPageViewBodyState extends State<SigninPageViewBody> {
           child: Column(
             children: [
               Gap(10),
-              CustomAppBar(isCart: true),
+              CustomAppBar(isCart: false),
               Gap(100.h),
               Text(
                 "Welcome Back",

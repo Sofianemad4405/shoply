@@ -34,7 +34,7 @@ class _CustomPopUpMenuState extends State<CustomPopUpMenu> {
         height: 29.69.h,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(8),
         ),
         child: SizedBox(
           child: Row(

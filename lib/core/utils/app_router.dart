@@ -9,6 +9,7 @@ import 'package:shopify/features/checkout/presentation/views/checkout.dart';
 import 'package:shopify/features/home/presentation/widgets/featured_products.dart';
 import 'package:shopify/features/on_boarding/widgets/on_boarding_screen.dart';
 import 'package:shopify/features/home/presentation/widgets/product_details.dart';
+import 'package:shopify/features/profile/screens/help_and_support.dart';
 import 'package:shopify/features/wishlist/presentation/wishlist_view.dart';
 import 'package:shopify/root.dart';
 
@@ -54,6 +55,9 @@ class AppRouter {
 
       case Constants.kCheckout:
         return MaterialPageRoute(builder: (_) => Checkout());
+
+      case Constants.kHelpAndSupport:
+        return MaterialPageRoute(builder: (_) => HelpAndSupport());
 
       default:
         return MaterialPageRoute(
