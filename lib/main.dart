@@ -90,6 +90,7 @@ void main() async {
       ),
     );
   } catch (e, s) {
+    log("message");
     log("❌ Initialization Error: $e");
     log("❌ Stacktrace: $s");
   }
