@@ -7,7 +7,6 @@ import 'package:shopify/features/wishlist/domain/wishlist_repo.dart';
 
 class WishlistRepoImpl implements WishlistRepo {
   final WishListDataSourceImpl wishListDataSourceImpl;
-
   final FireBaseAuthService fireBaseAuthService;
 
   WishlistRepoImpl({

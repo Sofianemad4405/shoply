@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
@@ -7,26 +7,38 @@ import 'package:shopify/core/utils/constants.dart';
 import 'package:shopify/core/utils/extention.dart';
 import 'package:shopify/core/utils/text_styles.dart';
 import 'package:shopify/core/widgets/custom_app_bar.dart';
-import 'package:shopify/features/auth/presentation/cubits/signin_cubits/siginin_cubit.dart';
+import 'package:shopify/features/auth/domain/entities/user_entity.dart';
+import 'package:shopify/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:shopify/features/auth/presentation/view/widgets/custom_button.dart';
 import 'package:shopify/features/auth/presentation/view/widgets/custom_text_field.dart';
 import 'package:shopify/features/auth/presentation/view/widgets/or_row.dart';
 import 'package:shopify/features/auth/presentation/view/widgets/social_auth_button.dart';
 
-class SigninPageViewBody extends StatefulWidget {
+class SigninPageViewBody extends ConsumerWidget {
   const SigninPageViewBody({super.key});
 
   @override
-  State<SigninPageViewBody> createState() => _SigninPageViewBodyState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final email = TextEditingController();
+    final password = TextEditingController();
+    final formKey = GlobalKey<FormState>();
 
-class _SigninPageViewBodyState extends State<SigninPageViewBody> {
-  final email = TextEditingController();
-  final password = TextEditingController();
-  final formKey = GlobalKey<FormState>();
+    final loginState = ref.watch(authNotifierProvider);
+    ref.listen<AsyncValue<UserEntity?>>(authNotifierProvider, (previous, next) {
+      next.whenOrNull(
+        error: (err, _) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(err.toString())));
+        },
+        data: (user) {
+          if (user != null) {
+            context.push(Constants.kRoot);
+          }
+        },
+      );
+    });
 
-  @override
-  Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Form(
         key: formKey,
@@ -75,17 +87,22 @@ class _SigninPageViewBodyState extends State<SigninPageViewBody> {
               Gap(20.h),
               OrRow(text: "Or Continue with"),
               Gap(20.h),
-              CustomButton(
-                text: "Sign In",
-                onPressed: () {
-                  if (formKey.currentState!.validate()) {
-                    context.read<SigininCubit>().signin(
-                      email: email.text,
-                      password: password.text,
-                    );
-                  }
-                },
-              ),
+
+              loginState.isLoading
+                  ? const CircularProgressIndicator()
+                  : CustomButton(
+                    text: "Sign In",
+                    onPressed: () {
+                      if (formKey.currentState!.validate()) {
+                        ref
+                            .read(authNotifierProvider.notifier)
+                            .signInWithEmailAndPassword(
+                              email: email.text.trim(),
+                              password: password.text.trim(),
+                            );
+                      }
+                    },
+                  ),
               Gap(20.h),
               Row(
                 children: [

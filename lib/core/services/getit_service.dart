@@ -20,7 +20,7 @@ void setupGetit() {
   getIt.registerSingleton<FireStoreService>(FireStoreService());
 
   getIt.registerSingleton<AuthRepo>(
-    AuthRepoImplementation(
+    AuthRepoImpl(
       authService: getIt<FireBaseAuthService>(),
       databaseService: getIt<FireStoreService>(),
     ),

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:shopify/core/utils/constants.dart';
 import 'package:shopify/core/utils/prefs.dart';
 import 'package:shopify/features/auth/data/model/user_model.dart';
-import 'package:shopify/features/auth/domain/models/user_entity.dart';
+import 'package:shopify/features/auth/domain/entities/user_entity.dart';
 
 String? validateName(value) {
   if (value!.isEmpty) {

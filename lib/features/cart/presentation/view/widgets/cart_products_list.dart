@@ -1,29 +1,28 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
-import 'package:shopify/core/models/product_entity.dart';
 import 'package:shopify/core/utils/constants.dart';
 import 'package:shopify/core/utils/extention.dart';
 import 'package:shopify/core/utils/text_styles.dart';
-import 'package:shopify/features/cart/presentation/cubits/cubit/cart_cubit.dart';
+import 'package:shopify/features/cart/presentation/providers/cart_notifier.dart';
 
-class CartProductsList extends StatelessWidget {
-  const CartProductsList({super.key, required this.products});
-
-  final List<ProductEntity> products;
+class CartProductsList extends ConsumerWidget {
+  const CartProductsList({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cartNotifier = ref.read(cartNotifierProvider.notifier);
+    final products = ref.watch(cartNotifierProvider);
     return Expanded(
       child: ListView.separated(
         separatorBuilder: (context, index) => Divider(thickness: 0.5),
         shrinkWrap: true,
         itemCount: products.length,
         itemBuilder: (context, index) {
-          final product = products[index];
+          final product = products.elementAt(index);
           return GestureDetector(
             onTap:
                 () =>
@@ -45,9 +44,7 @@ class CartProductsList extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          context.read<CartCubit>().decreaseProductQuantity(
-                            product,
-                          );
+                          cartNotifier.decreaseQuantity(product);
                           log(product.quantity.toString());
                         },
                         child: SvgPicture.asset("assets/imgs/svgs/minus.svg"),
@@ -60,7 +57,7 @@ class CartProductsList extends StatelessWidget {
                       Gap(10),
                       GestureDetector(
                         onTap: () {
-                          context.read<CartCubit>().increaseQuantity(product);
+                          cartNotifier.increaseQuantity(product);
                           log(product.quantity.toString());
                         },
                         child: SvgPicture.asset("assets/imgs/svgs/plus.svg"),
@@ -68,14 +65,15 @@ class CartProductsList extends StatelessWidget {
                       Spacer(),
                       GestureDetector(
                         onTap: () {
-                          context.read<CartCubit>().deleteProductFromCart(
-                            product,
-                          );
+                          cartNotifier.removeProductFromCart(product);
                           log(product.quantity.toString());
                         },
                         child: SvgPicture.asset(
                           "assets/imgs/svgs/trash.svg",
-                          color: Colors.red,
+                          colorFilter: ColorFilter.mode(
+                            Colors.red,
+                            BlendMode.srcIn,
+                          ),
                         ),
                       ),
                     ],

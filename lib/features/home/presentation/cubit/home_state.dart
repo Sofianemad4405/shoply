@@ -1,17 +1,17 @@
-part of 'home_cubit.dart';
+// part of 'home_cubit.dart';
 
-abstract class HomeState {}
+// abstract class HomeState {}
 
-final class HomeInitial extends HomeState {}
+// final class HomeInitial extends HomeState {}
 
-final class HomeLoading extends HomeState {}
+// final class HomeLoading extends HomeState {}
 
-final class HomeLoaded extends HomeState {
-  List<ProductEntity> products;
-  HomeLoaded({required this.products});
-}
+// final class HomeLoaded extends HomeState {
+//   List<ProductEntity> products;
+//   HomeLoaded({required this.products});
+// }
 
-final class HomeError extends HomeState {
-  final String message;
-  HomeError({required this.message});
-}
+// final class HomeError extends HomeState {
+//   final String message;
+//   HomeError({required this.message});
+// }

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:shopify/features/cart/presentation/cubits/cubit/cart_cubit.dart';
+import 'package:shopify/core/utils/constants.dart';
+import 'package:shopify/core/utils/extention.dart';
+import 'package:shopify/core/utils/fire_base_auth_service.dart';
+import 'package:shopify/core/utils/prefs.dart';
+import 'package:shopify/features/cart/presentation/providers/cart_notifier.dart';
 
-class CustomNavBar extends StatelessWidget {
+class CustomNavBar extends ConsumerWidget {
   final int currentIndex;
   final ValueChanged<int> onTabChange;
 
@@ -14,23 +18,23 @@ class CustomNavBar extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Theme(
       data: Theme.of(context).copyWith(
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
       ),
-      child: BlocBuilder<CartCubit, CartState>(
-        builder: (context, state) {
-          final cartItemsCount = context.read<CartCubit>().cartProducts.length;
+      child: Consumer(
+        builder: (context, ref, child) {
+          final cartItemsCount = ref.watch(cartNotifierProvider).length;
           return BottomNavigationBar(
             backgroundColor: Colors.white,
             currentIndex: currentIndex,
             onTap: onTabChange,
             type: BottomNavigationBarType.fixed,
             enableFeedback: false,
-            selectedItemColor: Color(0xff22C55E),
-            unselectedItemColor: Color(0xff6B7280),
+            selectedItemColor: const Color(0xff22C55E),
+            unselectedItemColor: const Color(0xff6B7280),
             items: [
               BottomNavigationBarItem(
                 icon: SvgPicture.asset(
@@ -104,11 +108,18 @@ class CustomNavBar extends StatelessWidget {
               ),
 
               BottomNavigationBarItem(
-                icon: SvgPicture.asset(
-                  "assets/imgs/svgs/profile.svg",
-                  colorFilter: ColorFilter.mode(
-                    currentIndex == 4 ? Color(0xff22C55E) : Color(0xff6B7280),
-                    BlendMode.srcIn,
+                icon: GestureDetector(
+                  onDoubleTap: () async {
+                    await FireBaseAuthService().signOut();
+                    context.pushAndRemoveUntil(Constants.kSignIn);
+                    Prefs.setBool(Constants.kIsLoggedIn, false);
+                  },
+                  child: SvgPicture.asset(
+                    "assets/imgs/svgs/profile.svg",
+                    colorFilter: ColorFilter.mode(
+                      currentIndex == 4 ? Color(0xff22C55E) : Color(0xff6B7280),
+                      BlendMode.srcIn,
+                    ),
                   ),
                 ),
                 label: 'Profile',

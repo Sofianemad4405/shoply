@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:shopify/core/services/fire_store_service.dart';
 import 'package:shopify/core/utils/constants.dart';
 import 'package:shopify/core/utils/fire_base_auth_service.dart';
-import 'package:shopify/features/auth/domain/models/user_entity.dart';
+import 'package:shopify/features/auth/domain/entities/user_entity.dart';
 
 part 'profile_state.dart';
 

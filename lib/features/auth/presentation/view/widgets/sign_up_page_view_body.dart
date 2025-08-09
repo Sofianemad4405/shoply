@@ -2,34 +2,47 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:shopify/core/utils/constants.dart';
 import 'package:shopify/core/widgets/app_heading.dart';
 import 'package:shopify/core/utils/extention.dart';
 import 'package:shopify/core/utils/helper_functions.dart';
 import 'package:shopify/core/utils/text_styles.dart';
+import 'package:shopify/features/auth/domain/entities/user_entity.dart';
 import 'package:shopify/features/auth/presentation/cubits/signup_cubits/signup_cubit.dart';
+import 'package:shopify/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:shopify/features/auth/presentation/view/widgets/custom_button.dart';
 import 'package:shopify/features/auth/presentation/view/widgets/custom_text_field.dart';
 import 'package:shopify/features/auth/presentation/view/widgets/or_row.dart';
 import 'package:shopify/features/auth/presentation/view/widgets/social_auth_button.dart';
 
-class SignUpViewBody extends StatefulWidget {
-  const SignUpViewBody({super.key});
-
+class SignUpPageViewBody extends ConsumerWidget {
+  const SignUpPageViewBody({super.key});
   @override
-  State<SignUpViewBody> createState() => _SignUpViewBodyState();
-}
-
-class _SignUpViewBodyState extends State<SignUpViewBody> {
-  final formKey = GlobalKey<FormState>();
-  final name = TextEditingController();
-  final location = TextEditingController();
-  final email = TextEditingController();
-  final password = TextEditingController();
-  final confirmPassword = TextEditingController();
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final formKey = GlobalKey<FormState>();
+    final name = TextEditingController();
+    final location = TextEditingController();
+    final email = TextEditingController();
+    final password = TextEditingController();
+    final confirmPassword = TextEditingController();
+    final signupState = ref.watch(authNotifierProvider);
+    ref.listen<AsyncValue<UserEntity?>>(authNotifierProvider, (previous, next) {
+      next.whenOrNull(
+        error: (err, _) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(err.toString())));
+        },
+        data: (user) {
+          if (user != null) {
+            context.push(Constants.kSignIn);
+          }
+        },
+      );
+    });
     return SingleChildScrollView(
       child: SafeArea(
         child: Form(
@@ -100,19 +113,23 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
                     isPassword: true,
                   ),
                   Gap(20),
-                  CustomButton(
-                    text: "Create Account",
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        context.read<SignupCubit>().signup(
-                          name: name.text,
-                          location: location.text,
-                          email: email.text,
-                          password: password.text,
-                        );
-                      }
-                    },
-                  ),
+                  signupState.isLoading
+                      ? const CircularProgressIndicator()
+                      : CustomButton(
+                        text: "Sign Up",
+                        onPressed: () {
+                          if (formKey.currentState!.validate()) {
+                            ref
+                                .read(authNotifierProvider.notifier)
+                                .signUpWithEmailAndPassword(
+                                  email: email.text.trim(),
+                                  password: password.text.trim(),
+                                  name: name.text.trim(),
+                                  location: location.text.trim(),
+                                );
+                          }
+                        },
+                      ),
                   Gap(30),
                   OrRow(text: "Or sign up with"),
                   Gap(30),

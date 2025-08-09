@@ -46,7 +46,7 @@ class AppRouter {
       case Constants.kFeaturedProducts:
         return MaterialPageRoute(
           builder:
-              (_) => FeaturedProducts(
+              (_) => FeaturedProductsPage(
                 products: settings.arguments as List<ProductEntity>,
               ),
         );

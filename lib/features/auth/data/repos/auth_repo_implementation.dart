@@ -8,17 +8,14 @@ import 'package:shopify/core/utils/fire_base_auth_service.dart';
 import 'package:shopify/core/utils/prefs.dart';
 import 'package:shopify/core/services/database_service.dart';
 import 'package:shopify/features/auth/data/model/user_model.dart';
-import 'package:shopify/features/auth/domain/models/user_entity.dart';
+import 'package:shopify/features/auth/domain/entities/user_entity.dart';
 import 'package:shopify/features/auth/domain/repos/auth_repo.dart';
 
-class AuthRepoImplementation implements AuthRepo {
+class AuthRepoImpl implements AuthRepo {
   final FireBaseAuthService authService;
   final DatabaseService databaseService;
 
-  AuthRepoImplementation({
-    required this.authService,
-    required this.databaseService,
-  });
+  AuthRepoImpl({required this.authService, required this.databaseService});
 
   @override
   Future<Either<Failure, UserEntity>> createUserWithEmailAndPassword({

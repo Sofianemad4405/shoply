@@ -13,12 +13,6 @@ class Cart extends StatefulWidget {
 
 class _CartState extends State<Cart> {
   @override
-  void initState() {
-    context.read<CartCubit>().init();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return CartViewBody();
   }

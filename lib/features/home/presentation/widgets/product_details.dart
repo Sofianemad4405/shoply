@@ -1,16 +1,12 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:shopify/core/models/product_entity.dart';
 import 'package:shopify/core/utils/constants.dart';
 import 'package:shopify/core/utils/text_styles.dart';
 import 'package:shopify/core/models/product_model.dart';
-import 'package:shopify/features/cart/presentation/cubits/cubit/cart_cubit.dart';
 import 'package:shopify/features/home/presentation/widgets/add_to_cart_button.dart';
 import 'package:shopify/features/home/presentation/widgets/product_meta_data.dart';
 import 'package:shopify/features/wishlist/presentation/cubit/cubit/wishlist_cubit.dart';
@@ -37,7 +33,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    // final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         title: Text("Product Details", style: TextStyles.blackBold),

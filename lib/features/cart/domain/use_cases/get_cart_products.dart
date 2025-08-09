@@ -1,8 +1,8 @@
 import 'package:shopify/core/models/product_entity.dart';
-import 'package:shopify/features/cart/data/repos/cart_repo_impl.dart';
+import 'package:shopify/features/cart/domain/repo/cart_repo.dart';
 
 class GetCartProducts {
-  final CartRepoImpl repo;
+  final CartRepo repo;
   GetCartProducts(this.repo);
   Future<List<ProductEntity>> call() => repo.getCartProducts();
 }

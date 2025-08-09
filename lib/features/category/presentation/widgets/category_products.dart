@@ -1,55 +1,38 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:iconsax/iconsax.dart';
-
-import 'package:shopify/core/models/product_entity.dart';
 import 'package:shopify/core/utils/constants.dart';
 import 'package:shopify/core/utils/extention.dart';
 import 'package:shopify/core/utils/text_styles.dart';
 import 'package:shopify/core/widgets/custom_app_bar.dart';
 import 'package:shopify/core/widgets/grid_or_list.dart';
-import 'package:shopify/features/cart/presentation/cubits/cubit/cart_cubit.dart';
-import 'package:shopify/features/category/presentation/cubit/caterories_products_cubit/category_products_cubit.dart';
+import 'package:shopify/features/category/presentation/providers/category_notifier.dart';
 import 'package:shopify/features/category/presentation/widgets/pop_up_menu.dart';
-import 'package:shopify/core/models/product_model.dart';
 import 'package:shopify/core/widgets/product_card.dart';
+import 'package:shopify/features/category/presentation/widgets/product_list_tile.dart';
 import 'package:shopify/features/home/presentation/widgets/product_details.dart';
-import 'package:shopify/features/wishlist/presentation/cubit/cubit/wishlist_cubit.dart';
 
-class CategoryProducts extends StatefulWidget {
+class CategoryProducts extends ConsumerStatefulWidget {
   const CategoryProducts({super.key, required this.categoryName});
   final String categoryName;
   static String routeName = Constants.kCategoryProducts;
 
   @override
-  State<CategoryProducts> createState() => _CategoryProductsState();
+  ConsumerState<CategoryProducts> createState() => _CategoryProductsState();
 }
 
-class _CategoryProductsState extends State<CategoryProducts> {
+class _CategoryProductsState extends ConsumerState<CategoryProducts> {
+  bool isGridView = true;
   @override
   void initState() {
-    log(widget.categoryName);
-    fetchProducts();
     super.initState();
-  }
-
-  void fetchProducts() async {
-    final fetched = await context
-        .read<CategoryProductsCubit>()
-        .fetchCategoryProducts(widget.categoryName, products);
-    setState(() {
-      products = fetched;
+    Future.microtask(() {
+      ref
+          .read(categoryNotifierProvider.notifier)
+          .fetchCategoryProducts(widget.categoryName);
     });
-    log(products.length.toString());
   }
 
-  List<Product> products = [];
-
-  bool isGridView = true;
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -109,249 +92,173 @@ class _CategoryProductsState extends State<CategoryProducts> {
             Gap(20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  Text(
-                    "${products.length} products found",
-                    style: TextStyles.greymini.copyWith(fontSize: 18),
-                  ),
-                  Spacer(),
-                  CustomPopUpMenu(
-                    title: context.read<CategoryProductsCubit>().sortMethod,
-                    items: [
-                      PopupMenuItem(value: 'name', child: Text('Sort by Name')),
-                      PopupMenuItem(
-                        value: 'price',
-                        child: Text('Sort by Price'),
-                      ),
-                      PopupMenuItem(
-                        value: 'rating',
-                        child: Text('Sort by Rating'),
-                      ),
-                    ],
-                    onSelected: (value) {
-                      context.read<CategoryProductsCubit>().sortMethod = value;
-                      context
-                          .read<CategoryProductsCubit>()
-                          .fetchCategoryProducts(widget.categoryName, products);
-                      setState(() {});
+              child: Consumer(
+                builder: (context, ref, child) {
+                  final products = ref.watch(categoryNotifierProvider);
+                  return products.when(
+                    data: (data) {
+                      return Row(
+                        children: [
+                          Text(
+                            "${data.length} products found",
+                            style: TextStyles.greymini.copyWith(fontSize: 18),
+                          ),
+                          Spacer(),
+                          CustomPopUpMenu(
+                            title:
+                                ref
+                                    .read(categoryNotifierProvider.notifier)
+                                    .sortMethod,
+                            items: [
+                              PopupMenuItem(
+                                value: 'name',
+                                child: Text('Sort by Name'),
+                              ),
+                              PopupMenuItem(
+                                value: 'price',
+                                child: Text('Sort by Price'),
+                              ),
+                              PopupMenuItem(
+                                value: 'rating',
+                                child: Text('Sort by Rating'),
+                              ),
+                            ],
+                            onSelected: (value) {
+                              ref
+                                  .read(categoryNotifierProvider.notifier)
+                                  .sortMethod = value;
+                              ref
+                                  .read(categoryNotifierProvider.notifier)
+                                  .fetchCategoryProductsSorted(
+                                    sortMethod: value,
+                                    order:
+                                        ref
+                                            .read(
+                                              categoryNotifierProvider.notifier,
+                                            )
+                                            .order,
+                                    categoryName: widget.categoryName,
+                                  );
+                              setState(() {});
+                            },
+                            image: "assets/imgs/svgs/sort.svg",
+                          ),
+                          Gap(20),
+                          CustomPopUpMenu(
+                            title:
+                                ref
+                                    .read(categoryNotifierProvider.notifier)
+                                    .order,
+                            items: [
+                              PopupMenuItem(
+                                value: 'asc',
+                                child: Text('Ascending'),
+                              ),
+                              PopupMenuItem(
+                                value: 'desc',
+                                child: Text('Descending'),
+                              ),
+                            ],
+                            onSelected: (value) {
+                              ref
+                                  .read(categoryNotifierProvider.notifier)
+                                  .order = value;
+                              ref
+                                  .read(categoryNotifierProvider.notifier)
+                                  .fetchCategoryProductsSorted(
+                                    sortMethod:
+                                        ref
+                                            .read(
+                                              categoryNotifierProvider.notifier,
+                                            )
+                                            .sortMethod,
+                                    order: value,
+                                    categoryName: widget.categoryName,
+                                  );
+                              setState(() {});
+                            },
+                            image: "assets/imgs/svgs/filter.svg",
+                          ),
+                        ],
+                      );
                     },
-                    image: "assets/imgs/svgs/sort.svg",
-                  ),
-                  Gap(20),
-                  CustomPopUpMenu(
-                    title: context.read<CategoryProductsCubit>().order,
-                    items: [
-                      PopupMenuItem(value: 'asc', child: Text('Ascending')),
-                      PopupMenuItem(value: 'desc', child: Text('Descending')),
-                    ],
-                    onSelected: (value) {
-                      context.read<CategoryProductsCubit>().order = value;
-                      context
-                          .read<CategoryProductsCubit>()
-                          .fetchCategoryProducts(widget.categoryName, products);
-                      setState(() {});
+                    error: (Object error, StackTrace stackTrace) {
+                      return Text("Error fetching data $error");
                     },
-                    image: "assets/imgs/svgs/filter.svg",
-                  ),
-                ],
+                    loading: () => const CircularProgressIndicator(),
+                  );
+                },
               ),
             ),
             Gap(20),
-            BlocConsumer<CategoryProductsCubit, CategoryProductsState>(
-              listener: (context, state) {
-                if (state is CategoryProductsError) {
-                  log(state.message);
-                  context.pop();
-                }
-                if (state is CategoryProductsLoaded) {
-                  products = state.products;
-                }
-              },
-              builder: (context, state) {
-                return state is CategoryProductsLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : Expanded(
-                      child:
-                          isGridView
-                              ? Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                ),
-                                child: GridView.builder(
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2,
-                                        crossAxisSpacing: 16,
-                                        mainAxisSpacing: 16,
-                                        childAspectRatio:
-                                            screenWidth / (screenHeight / 1.35),
-                                      ),
-                                  itemCount: products.length,
-                                  itemBuilder: (context, index) {
-                                    return ProductCard(
-                                      product: products[index],
-                                    );
-                                  },
-                                ),
-                              )
-                              : Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                ),
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: products.length,
-                                  itemBuilder: (context, index) {
-                                    return GestureDetector(
-                                      onTap:
-                                          () => context.push(
-                                            ProductDetails.routeName,
-                                            arguments: products[index],
-                                          ),
-                                      child: ProductListTile(
-                                        product: products[index],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                    );
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ProductListTile extends StatelessWidget {
-  const ProductListTile({super.key, required this.product});
-  final ProductEntity product;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              offset: const Offset(0, 2),
-              blurRadius: 4,
-            ),
-          ],
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: ListTile(
-          leading: Image.network(product.image ?? Constants.holderImage),
-          title: Text(
-            product.name,
-            style: TextStyles.blackBold.copyWith(fontSize: 16),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                product.details,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              Row(
-                children: [
-                  Text(
-                    "\$${product.price}",
-                    style: TextStyle(color: const Color(0xFF22C55E)),
-                  ),
-                  Spacer(),
-                  BlocBuilder<WishlistCubit, WishlistState>(
-                    builder: (context, state) {
-                      return IconButton(
-                        icon: Icon(
-                          context.read<WishlistCubit>().isInWishlist(product.id)
-                              ? Iconsax.heart5
-                              : Iconsax.heart,
-                          color:
-                              context.read<WishlistCubit>().isInWishlist(
-                                    product.id,
-                                  )
-                                  ? Colors.red
-                                  : Colors.grey,
-                        ),
-                        onPressed: () {
-                          context
-                              .read<WishlistCubit>()
-                              .toggleWishlistOptimistically(product);
-                        },
-                      );
-                    },
-                  ),
-
-                  BlocConsumer<CartCubit, CartState>(
-                    listener: (context, state) {
-                      // if (state is CartAddingState) {
-                      //   ScaffoldMessenger.of(context).showSnackBar(
-                      //     SnackBar(
-                      //       content: const Text("Adding product to cart..."),
-                      //       behavior: SnackBarBehavior.floating,
-                      //       backgroundColor: Colors.green,
-                      //       shape: RoundedRectangleBorder(
-                      //         borderRadius: BorderRadius.circular(12),
-                      //       ),
-                      //       duration: Duration(milliseconds: 500),
-                      //     ),
-                      //   );
-                      // } else if (state is CartRemovingState) {
-                      //   ScaffoldMessenger.of(context).showSnackBar(
-                      //     SnackBar(
-                      //       content: const Text(
-                      //         "Removing product from cart...",
-                      //       ),
-                      //       duration: Duration(seconds: 1),
-                      //       behavior: SnackBarBehavior.floating,
-                      //       backgroundColor: Colors.red,
-                      //       shape: RoundedRectangleBorder(
-                      //         borderRadius: BorderRadius.circular(12),
-                      //       ),
-                      //     ),
-                      //   );
-                      // }
-                    },
-                    builder: (context, state) {
-                      return GestureDetector(
-                        onTap: () {
-                          context.read<CartCubit>().toggleCartOptimistically(
-                            product,
-                          );
-                        },
+            Consumer(
+              builder: (context, ref, child) {
+                final products = ref.watch(categoryNotifierProvider);
+                return products.when(
+                  data:
+                      (data) => Expanded(
                         child:
-                            !context.read<CartCubit>().isInCart(product.id)
-                                ? SvgPicture.asset(
-                                  "assets/imgs/svgs/cart.svg",
-                                  colorFilter: ColorFilter.mode(
-                                    Colors.grey,
-                                    BlendMode.srcIn,
+                            isGridView
+                                ? Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                  ),
+                                  child: GridView.builder(
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          crossAxisSpacing: 16,
+                                          mainAxisSpacing: 16,
+                                          childAspectRatio:
+                                              screenWidth /
+                                              (screenHeight / 1.35),
+                                        ),
+                                    itemCount: data.length,
+                                    itemBuilder: (context, index) {
+                                      return GestureDetector(
+                                        onTap:
+                                            () => context.push(
+                                              ProductDetails.routeName,
+                                              arguments: data[index],
+                                            ),
+                                        child: ProductCard(
+                                          product: data[index],
+                                        ),
+                                      );
+                                    },
                                   ),
                                 )
-                                : SvgPicture.asset(
-                                  "assets/imgs/svgs/trash.svg",
-                                  colorFilter: ColorFilter.mode(
-                                    Colors.red,
-                                    BlendMode.srcIn,
+                                : Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                  ),
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: data.length,
+                                    itemBuilder: (context, index) {
+                                      return GestureDetector(
+                                        onTap:
+                                            () => context.push(
+                                              ProductDetails.routeName,
+                                              arguments: data[index],
+                                            ),
+                                        child: ProductListTile(
+                                          product: data[index],
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
+                      ),
+                  error:
+                      (error, stackTrace) =>
+                          Center(child: Text("Error fetching products $error")),
+                  loading:
+                      () => const Center(child: CircularProgressIndicator()),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

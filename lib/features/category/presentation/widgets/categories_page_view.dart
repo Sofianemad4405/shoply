@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:shopify/core/utils/constants.dart';
 import 'package:shopify/core/utils/extention.dart';
 import 'package:shopify/core/utils/text_styles.dart';
 import 'package:shopify/core/widgets/custom_app_bar.dart';
 import 'package:shopify/core/widgets/grid_or_list.dart';
-import 'package:shopify/features/category/presentation/cubit/home_categories_cubit/home_categories_cubit.dart';
 import 'package:shopify/features/category/presentation/widgets/category_list_tile.dart';
 import 'package:shopify/features/category/presentation/widgets/category_icon.dart';
 import 'package:shopify/features/category/presentation/widgets/category_products.dart';
+import 'package:shopify/features/home/presentation/providers/home_providers.dart';
 
 class CategoriesPageView extends StatefulWidget {
   const CategoriesPageView({super.key});
@@ -84,11 +84,45 @@ class _CategoriesPageViewState extends State<CategoriesPageView> {
                   isGridView
                       ? Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: CategoriesGridView(),
+                        child: Consumer(
+                          builder: (context, ref, child) {
+                            final categories = ref.watch(categoriesProvider);
+                            return categories.when(
+                              data:
+                                  (data) =>
+                                      CategoriesGridView(categories: data),
+                              error:
+                                  (error, stackTrace) => const Center(
+                                    child: Text("Error fetching categories"),
+                                  ),
+                              loading:
+                                  () => const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                            );
+                          },
+                        ),
                       )
                       : Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 4),
-                        child: CategoriesListView(),
+                        child: Consumer(
+                          builder: (context, ref, child) {
+                            final categories = ref.watch(categoriesProvider);
+                            return categories.when(
+                              data:
+                                  (data) =>
+                                      CategoriesListView(categories: data),
+                              error:
+                                  (error, stackTrace) => const Center(
+                                    child: Text("Error fetching categories"),
+                                  ),
+                              loading:
+                                  () => const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                            );
+                          },
+                        ),
                       ),
             ),
           ],
@@ -99,12 +133,13 @@ class _CategoriesPageViewState extends State<CategoriesPageView> {
 }
 
 class CategoriesListView extends StatelessWidget {
-  const CategoriesListView({super.key});
+  const CategoriesListView({super.key, required this.categories});
+  final List<dynamic> categories;
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: context.read<HomeCategoriesCubit>().categories.length,
+      itemCount: categories.length,
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () {
@@ -112,15 +147,13 @@ class CategoriesListView extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder:
-                    (context) => CategoryProducts(
-                      categoryName:
-                          context.read<HomeCategoriesCubit>().categories[index],
-                    ),
+                    (context) =>
+                        CategoryProducts(categoryName: categories[index]),
               ),
             );
           },
           child: CategoryListTile(
-            category: context.read<HomeCategoriesCubit>().categories[index],
+            category: categories[index],
             image: Constants.categoryImages[index],
           ),
         );
@@ -130,7 +163,8 @@ class CategoriesListView extends StatelessWidget {
 }
 
 class CategoriesGridView extends StatelessWidget {
-  const CategoriesGridView({super.key});
+  const CategoriesGridView({super.key, required this.categories});
+  final List<dynamic> categories;
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +175,7 @@ class CategoriesGridView extends StatelessWidget {
         mainAxisSpacing: 4,
         childAspectRatio: .7,
       ),
-      itemCount: context.read<HomeCategoriesCubit>().categories.length,
+      itemCount: categories.length,
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () {
@@ -149,16 +183,14 @@ class CategoriesGridView extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder:
-                    (context) => CategoryProducts(
-                      categoryName:
-                          context.read<HomeCategoriesCubit>().categories[index],
-                    ),
+                    (context) =>
+                        CategoryProducts(categoryName: categories[index]),
               ),
             );
           },
           child: CategoryIcon(
             image: Constants.categoryImages[index],
-            category: context.read<HomeCategoriesCubit>().categories[index],
+            category: categories[index],
           ),
         );
       },

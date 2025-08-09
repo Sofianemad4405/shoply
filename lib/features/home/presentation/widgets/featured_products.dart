@@ -6,19 +6,19 @@ import 'package:shopify/core/utils/extention.dart';
 import 'package:shopify/core/utils/text_styles.dart';
 import 'package:shopify/core/widgets/custom_app_bar.dart';
 import 'package:shopify/core/widgets/grid_or_list.dart';
-import 'package:shopify/features/category/presentation/widgets/category_products.dart';
+import 'package:shopify/features/category/presentation/widgets/product_list_tile.dart';
 import 'package:shopify/features/home/presentation/widgets/featured_products_list.dart';
 
-class FeaturedProducts extends StatefulWidget {
-  const FeaturedProducts({super.key, required this.products});
+class FeaturedProductsPage extends StatefulWidget {
+  const FeaturedProductsPage({super.key, required this.products});
   final List<ProductEntity> products;
   static String routeName = Constants.kFeaturedProducts;
 
   @override
-  State<FeaturedProducts> createState() => _FeaturedProductsState();
+  State<FeaturedProductsPage> createState() => _FeaturedProductsState();
 }
 
-class _FeaturedProductsState extends State<FeaturedProducts> {
+class _FeaturedProductsState extends State<FeaturedProductsPage> {
   bool isGridView = false;
 
   @override

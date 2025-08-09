@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shopify/core/services/fire_store_service.dart';
 import 'package:shopify/core/services/getit_service.dart' as GetItService;
@@ -21,7 +22,6 @@ import 'package:shopify/features/wishlist/presentation/cubit/cubit/wishlist_cubi
 import 'package:shopify/firebase_options.dart';
 import 'package:shopify/shoply.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shopify/features/home/presentation/cubit/home_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,10 +52,6 @@ void main() async {
         builder:
             (context, child) => MultiBlocProvider(
               providers: [
-                BlocProvider(create: (context) => HomeCubit()),
-                BlocProvider(create: (context) => HomeCategoriesCubit()),
-                BlocProvider(create: (context) => CategoryProductsCubit()),
-                BlocProvider(create: (context) => SearchCubit()),
                 BlocProvider(
                   create:
                       (context) => CartCubit(
@@ -85,7 +81,7 @@ void main() async {
                       )..init(),
                 ),
               ],
-              child: const Shoply(),
+              child: ProviderScope(child: const Shoply()),
             ),
       ),
     );

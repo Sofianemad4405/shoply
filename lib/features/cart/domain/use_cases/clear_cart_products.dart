@@ -1,7 +1,7 @@
-import 'package:shopify/features/cart/data/repos/cart_repo_impl.dart';
+import 'package:shopify/features/cart/domain/repo/cart_repo.dart';
 
 class ClearCartProducts {
-  final CartRepoImpl repo;
+  final CartRepo repo;
 
   ClearCartProducts(this.repo);
   Future<void> call() => repo.clearCart();

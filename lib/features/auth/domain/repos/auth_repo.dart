@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:shopify/core/errors/failure.dart';
-import 'package:shopify/features/auth/domain/models/user_entity.dart';
+import 'package:shopify/features/auth/domain/entities/user_entity.dart';
 
 abstract class AuthRepo {
   Future<Either<Failure, UserEntity>> createUserWithEmailAndPassword({

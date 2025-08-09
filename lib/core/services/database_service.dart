@@ -1,5 +1,5 @@
 import 'package:shopify/core/models/product_model.dart';
-import 'package:shopify/features/auth/domain/models/user_entity.dart';
+import 'package:shopify/features/auth/domain/entities/user_entity.dart';
 import 'package:shopify/features/checkout/data/models/delivery_address_model.dart';
 
 abstract class DatabaseService {

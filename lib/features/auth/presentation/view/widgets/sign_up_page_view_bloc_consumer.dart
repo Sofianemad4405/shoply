@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:shopify/features/auth/presentation/cubits/signup_cubits/signup_cubit.dart';
-import 'package:shopify/features/auth/presentation/view/widgets/sign_up_view_body.dart';
+import 'package:shopify/features/auth/presentation/view/widgets/sign_up_page_view_body.dart';
 
 class SignUpPageViewBlocConsumer extends StatelessWidget {
   const SignUpPageViewBlocConsumer({super.key});
@@ -41,7 +41,7 @@ class SignUpPageViewBlocConsumer extends StatelessWidget {
         return ModalProgressHUD(
           color: Colors.transparent,
           inAsyncCall: state is SignupLoading,
-          child: SignUpViewBody(),
+          child: SignUpPageViewBody(),
         );
       },
     );
