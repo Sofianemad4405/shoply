@@ -1,85 +1,36 @@
-# 🛒 Shoply
+# Shoply
 
-**Shoply** is a modern shopping application that lets users browse, search, and purchase products with ease. It leverages a RESTful API for data fetching and includes essential e-commerce features to deliver a smooth and engaging shopping experience.
+Shoply is an e-commerce application built with Flutter. It serves as a personal learning project to implement RESTful API integration, robust state management, and essential shopping features.
 
----
+## Features
 
-## 📱 About the Project
+* **Authentication:** Secure user sign-up and login using Firebase Authentication.
+* **Product Browsing:** Fetch dynamic product data via RESTful API, organized into categories.
+* **Search & Filter:** Search products by keyword and sort them based on price or relevance.
+* **Shopping Cart & Wishlist:** Add products to a cart for checkout or save them to a wishlist.
+* **Product Details:** View comprehensive product information, image galleries, user comments, and ratings.
+* **State Management:** Built using Cubit (BLoC library) for a clean separation of business logic and UI.
 
-Shoply is designed to be a simple but complete shopping app that demonstrates good mobile app architecture and best practices. It supports user authentication, dynamic product browsing, cart management, and more.
+## Tech Stack
 
----
+* **Framework:** Flutter / Dart
+* **State Management:** Cubit
+* **Backend Services:** RESTful API & Firebase (Auth)
 
-## 🚀 Features
+## Current Status & Roadmap
 
-- **RESTful API Integration**  
-  Fetch product data from a remote backend using clean, asynchronous API calls.
+The core shopping functionalities, API integration, and user authentication are successfully implemented. 
 
-- **Product Categories**  
-  - Products are organized into categories for easy browsing.
-  - Users can filter products by category.
+**Pending / Future Updates:**
+* Complete the User Profile page (currently under development).
+* Integrate a mock payment gateway for a complete checkout flow.
+* Add push notifications for offers.
+* Enhance UI/UX with smooth animations and dark mode support.
 
-- **Search & Sort**  
-  - Search products by keyword.
-  - Sort products based on criteria like price, popularity, or relevance.
+## Contributing
 
-- **Wishlist Management**  
-  - Add or remove items from the wishlist.
-  - View all your liked products in one place.
+This is currently a personal educational project. Feedback and suggestions are always welcome.
 
-- **Shopping Cart**  
-  - Add products to your cart.
-  - Review and manage items before checkout.
+## License
 
-- **Authentication with Firebase**  
-  - User sign up and login using Firebase Authentication.
-  - Secure and reliable auth flow.
-
-- **Product Details Page**  
-  - Shows complete details about the selected product.
-  - Displays all available product images in a gallery.
-  - Includes user comments and ratings to aid purchase decisions.
-
-- **State Management with Cubit**  
-  - Clean and maintainable state management.
-  - Separation of UI and business logic for better scalability.
-
----
-
-## 🛠️ Tech Stack
-
-- **Flutter**: Cross-platform mobile development.
-- **Firebase**: Authentication and backend services.
-- **RESTful API**: Product data and listings.
-- **Cubit (Bloc Library)**: State management.
-
----
-
-## ⚡ Roadmap / Notes
-
-- ✅ Core shopping features implemented.
-- ✅ RESTful API integration.
-- ✅ Firebase authentication.
-- ⚠️ **Profile Page**: Currently incomplete. I plan to finish this page in future updates.
-
----
-
-## 📌 Future Plans
-
-- Complete the profile page with user details and order history.
-- Add payment gateway integration.
-- Implement push notifications for offers and updates.
-- Support for multiple languages.
-- Enhance UI/UX design with animations and themes.
-
----
-
-## 🤝 Contributing
-
-Currently a personal project. Contributions are welcome once the base features are fully stable!
-
----
-
-## 📄 License
-
-This project is for educational/demo purposes. License details can be added here later.
+This project is for educational and portfolio purposes.
