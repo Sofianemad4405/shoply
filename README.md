@@ -34,3 +34,13 @@ This is currently a personal educational project. Feedback and suggestions are a
 ## License
 
 This project is for educational and portfolio purposes.
+
+## Screenshots
+
+| Splash Screen | Home Screen | Calendar Screen |
+|:---:|:---:|:---:|
+| ![Splash Screen](assets/imgs/screenshots/splash.jpg) | ![Home Screen](assets/imgs/screenshots/home.jpg) | ![Calendar Screen](assets/imgs/screenshots/calendar_page.jpg) |
+| **Add Todo** | **Add Todo To Project** | **Edit Todo** |
+| ![Add Todo](assets/imgs/screenshots/addTodo.jpg) | ![Add Todo To Project](assets/imgs/screenshots/add_todo_to_project.jpg) | ![Edit Todo Screen](assets/imgs/screenshots/edit_todo.jpg) |
+| **Focus Mode** | **Projects Page** | **Note Details** |
+| ![Focus Mode Screen](assets/imgs/screenshots/focus_mode.jpg) | ![Projects Page](assets/imgs/screenshots/projects.jpg) | ![Note Details](assets/imgs/screenshots/note_details.jpg) |
